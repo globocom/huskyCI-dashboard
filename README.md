@@ -7,11 +7,9 @@
   <a href="https://github.com/rafaveira3/writing-and-presentations/blob/master/DEFCON-27-APP-SEC-VILLAGE-Rafael-Santos-huskyCI-Finding-security-flaws-in-CI-before-deploying-them.pdf"><img src="https://img.shields.io/badge/DEFCON%2027-AppSec%20Village-blueviolet"/></a>
 </p>
 
-huskyCI-dashboard is a React App to display data from `/stats` route using graphs.
-
 ## How does it work?
 
-The main goal of this project is to provide a frontend for every huskyCI user check the stats of the analyses done.
+The main goal of this project is to provide a frontend for every huskyCI user check the stats of the analyses done. If you don't know yet what huskyCI is, you should check [this repository](https://github.com/globocom/huskyCI).
 
 <p align="center"><img src="fe.png"/></p>
 
@@ -28,7 +26,7 @@ After cloning this repository, simply run these commands inside huskyCI-dashboar
 
 ```sh
 yarn install
-echo 'export REACT_APP_HUSKYCI_FE_API_ADDRESS="http://urlToHuskyCIAPI"' > .env
+echo 'export REACT_APP_HUSKYCI_FE_API_ADDRESS="http://127.0.0.1:8888"' > .env
 source .env
 ```
 
