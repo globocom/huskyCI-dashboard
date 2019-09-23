@@ -1,0 +1,5 @@
+hooks:
+  build:
+  - yarn global add react-scripts serve
+  - yarn install
+  - yarn build
