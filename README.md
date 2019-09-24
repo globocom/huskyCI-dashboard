@@ -15,6 +15,9 @@ The main goal of this project is to provide a frontend for every huskyCI user ch
 
 ## Requirements
 
+### Node
+If you don't have Node installed in your environment, follow the instructions [here](https://gist.github.com/d2s/372b5943bce17b964a79) for your correspondent environment.
+
 ### Yarn
 
 ```sh
