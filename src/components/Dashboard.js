@@ -9,6 +9,7 @@ import { Bar } from "react-chartjs-2";
 import { withStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 import _ from "lodash";
+import PropTypes from "prop-types";
 
 const styles = {
   root: {
@@ -287,6 +288,10 @@ const Row = ({ children }) => (
   >
     {children}
   </div>
-);
+)
+
+Row.propTypes = {
+  children: PropTypes.node,
+}
 
 export default withStyles(styles)(Dashboard);
