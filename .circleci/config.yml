@@ -1,0 +1,19 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.11
+
+    working_directory: /go/src/github.com/globocom/huskyCI-dashboard
+
+    steps:
+      - checkout
+      - run:
+          name: "Tests"
+          command: |
+            make test
+      - run:
+          name: "Check security using Yarn Audit"
+          command: |
+            make check-sec
