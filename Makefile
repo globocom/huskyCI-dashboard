@@ -1,10 +1,6 @@
 .SILENT:
 .DEFAULT_GOAL := help
 
-NPM ?= $(shell which npm)
-YARN ?= $(shell which yarn)
-PKG_MANAGER ?= $(if $(YARN),$(YARN),$(NPM))
-
 COLOR_RESET = \033[0m
 COLOR_COMMAND = \033[36m
 COLOR_YELLOW = \033[33m
@@ -15,22 +11,19 @@ PROJECT := huskyCI-dashboard
 
 ## Installs locally using install command.
 install:
-	@${PKG_MANAGER} install
+	yarn install
 
 ## Runs locally using start command.
 run:
-	@${PKG_MANAGER} start
+	yarn start
 	
 ## Checks for vulnerabilities using audit command.
 check-sec:
-	@${PKG_MANAGER} audit
-
-## Runs unit tests using test command.
-unit:
-	@${PKG_MANAGER} test 
+	yarn audit
 
 ## Runs a full test into project.
-test: unit
+test: 
+	yarn test
 
 ## Shows this help message.
 help:
