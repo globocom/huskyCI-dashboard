@@ -10,3 +10,9 @@ jobs:
           name: "Check security using Yarn Audit"
           command: |
             make check-sec
+      - run:
+          name: "Build files"
+          command: |
+            yarn global add react-scripts
+            yarn install
+            make build
