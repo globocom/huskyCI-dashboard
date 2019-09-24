@@ -1,9 +1,5 @@
 {
-  "parser": "babel-eslint",
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ],
+  "extends": "airbnb",
   "env": {
     "browser": true,
     "node": true,
@@ -20,6 +16,9 @@
     "react": {
       "version": "detect"
     }
+  },
+  "rules": {
+    "react/jsx-filename-extension": [0]
   },
   "plugins": [ "react" ]
 }
