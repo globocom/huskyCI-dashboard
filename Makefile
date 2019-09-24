@@ -13,6 +13,10 @@ PROJECT := huskyCI-dashboard
 install:
 	yarn install
 
+## Builds static files from react app.
+build:
+	yarn build
+
 ## Runs locally using start command.
 run:
 	yarn start
@@ -24,6 +28,17 @@ check-sec:
 ## Runs a full test into project.
 test: 
 	yarn test
+
+## Creates a container image based on most recent dashboard code
+build-container: 
+	docker build . -t huskyci/dashboard
+
+## Starts huskyci/dashboard container
+start-container: 
+	docker run -p 8080:80 huskyci/dashboard
+
+## Builds and starts dashboard add using huskyci/dashboard container
+run-container: build-container start-container
 
 ## Shows this help message.
 help:
