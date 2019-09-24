@@ -21,12 +21,9 @@ run:
 check-sec:
 	yarn audit
 
-## Runs unit tests using test command.
-unit:
-	yarn test 
-
 ## Runs a full test into project.
-test: unit
+test: 
+	yarn test
 
 ## Shows this help message.
 help:
