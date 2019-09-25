@@ -1,4 +1,4 @@
-<p align="center"><img src="huskyCI-dashboard.png"/></p>
+<p align="center"><img src="src/logo.png"/></p>
 
 <p align="center">
   <a href="https://github.com/globocom/huskyCI-dashboard/releases"><img src="https://img.shields.io/github/v/release/globocom/huskyCI-dashboard"/></a>
@@ -10,7 +10,7 @@
 
 ## How does it work?
 
-The main goal of this project is to provide a frontend for every huskyCI user check the stats of the analyses done. If you don't know yet what huskyCI is, you should check [this repository](https://github.com/globocom/huskyCI).
+The main goal of this project is to provide a front-end for every huskyCI user to check the stats of the analyses done. If you don't know yet what huskyCI is, check it out [here](https://github.com/globocom/huskyCI).
 
 <p align="center"><img src="charts.png"/></p>
 
@@ -40,7 +40,7 @@ yarn start
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests to huskyCI-dashboard.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process of submitting pull requests to huskyCI-dashboard.
 
 ## License
 
