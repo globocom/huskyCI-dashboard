@@ -4,12 +4,13 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 */
 
-import React from 'react';
+import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import SnackComponent from './SnackComponent';
 
 const styles = {
   root: {
@@ -42,7 +43,7 @@ const colorYellowHover = '#f4bb43';
 const colorGray = '#ccd0d9';
 const colorGrayHover = '#aab2bd';
 
-class Dashboard extends React.Component {
+class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,9 +59,11 @@ class Dashboard extends React.Component {
         gosec: 0, npmAudit: 0, yarnAudit: 0, brakeman: 0, safety: 0, bandit: 0,
       },
       repositories: 0,
+      snackOpen: false,
+      variantValue: '',
+      snackMessage: '',
     };
     this.timeoutID = 0;
-    this.refreshCharts = this.refreshCharts.bind(this);
     this.refreshCharts();
   }
 
@@ -72,26 +75,23 @@ class Dashboard extends React.Component {
     clearInterval(this.timeoutID);
   }
 
-  refreshCharts() {
-    let [numGosecResult, numNpmauditResult, numYarnauditResult, numBrakemanResult, numSafetyResult,
-      numBanditResult] = [0, 0, 0, 0, 0, 0];
-    let [numGolangResult, numPythonResult, numRubyResult, numJavaScriptResult] = [0, 0, 0, 0];
-    let [numFailedResult, numWarningResult, numPassedResult, numErrorResult] = [0, 0, 0, 0];
-    let newNumAuthorsResult = 0;
-    let newRepositoryResult = 0;
-
-    fetch(huskyCIAuthorRoute).then((resp) => {
-      resp.json().then((authorResultJSON) => {
-        newNumAuthorsResult = authorResultJSON[0].totalAuthors;
+  callHuskyAPI = (huskyRoute) => fetch(huskyRoute).then((response) => {
+    if (!response.ok) {
+      this.openSnack('error', 'Service is unavailable');
+      return response.status;
+    }
+    if (huskyRoute === huskyCIAuthorRoute) {
+      response.json().then((authorResultJSON) => {
+        const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
         const { numAuthors } = this.state;
         if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
           this.setState({ numAuthors: newNumAuthorsResult });
         }
       });
-    });
-
-    fetch(huskyCIAnalysisRoute).then((resp) => {
-      resp.json().then((analysisResultJSON) => {
+    }
+    if (huskyRoute === huskyCIAnalysisRoute) {
+      response.json().then((analysisResultJSON) => {
+        let [numFailedResult, numWarningResult, numPassedResult, numErrorResult] = [0, 0, 0, 0];
         Object.keys(analysisResultJSON).forEach((key) => {
           if (_.isEqual(analysisResultJSON[key].result, 'failed')) {
             numFailedResult = analysisResultJSON[key].count;
@@ -106,7 +106,8 @@ class Dashboard extends React.Component {
             numErrorResult = analysisResultJSON[key].count;
           }
         });
-        const totalAnalyses = numFailedResult + numWarningResult + numPassedResult + numErrorResult;
+        const totalAnalyses = numFailedResult
+            + numWarningResult + numPassedResult + numErrorResult;
         const { numAnalysis } = this.state;
         if (!_.isEqual(numAnalysis, totalAnalyses)) {
           this.setState({
@@ -120,10 +121,10 @@ class Dashboard extends React.Component {
           });
         }
       });
-    });
-
-    fetch(huskyCILanguageRoute).then((resp) => {
-      resp.json().then((languageResultJSON) => {
+    }
+    if (huskyRoute === huskyCILanguageRoute) {
+      let [numGolangResult, numPythonResult, numRubyResult, numJavaScriptResult] = [0, 0, 0, 0];
+      response.json().then((languageResultJSON) => {
         Object.keys(languageResultJSON).forEach((key) => {
           if (_.isEqual(languageResultJSON[key].language, 'Go')) {
             numGolangResult = languageResultJSON[key].count;
@@ -149,10 +150,11 @@ class Dashboard extends React.Component {
           this.setState({ languages: totalLanguages });
         }
       });
-    });
-
-    fetch(huskyCIContainerRoute).then((resp) => {
-      resp.json().then((containerResultJSON) => {
+    }
+    if (huskyRoute === huskyCIContainerRoute) {
+      let [numGosecResult, numNpmauditResult, numYarnauditResult, numBrakemanResult,
+        numSafetyResult, numBanditResult] = [0, 0, 0, 0, 0, 0];
+      response.json().then((containerResultJSON) => {
         Object.keys(containerResultJSON).forEach((key) => {
           if (_.isEqual(containerResultJSON[key].container, 'gosec')) {
             numGosecResult = containerResultJSON[key].count;
@@ -186,16 +188,53 @@ class Dashboard extends React.Component {
           this.setState({ containers: totalContainers });
         }
       });
-    });
-
-    fetch(huskyCIRepositoryRoute).then((resp) => {
-      resp.json().then((repositoryResultJSON) => {
+    }
+    if (huskyRoute === huskyCIRepositoryRoute) {
+      let newRepositoryResult = 0;
+      response.json().then((repositoryResultJSON) => {
         newRepositoryResult = repositoryResultJSON[0].totalRepositories;
         const { repositories } = this.state;
         if (!_.isEqual(repositories, newRepositoryResult)) {
           this.setState({ repositories: newRepositoryResult });
         }
       });
+    }
+    return response.status;
+  }).catch(() => {
+    this.openSnack('error', 'Service is unavailable');
+    return 500;
+  })
+
+  openSnack = (variant, message) => {
+    this.setState({
+      snackOpen: true,
+      variantValue: variant,
+      snackMessage: message,
+    });
+  }
+
+  closeSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      snackOpen: false,
+    });
+  }
+
+  refreshCharts = () => {
+    const huskyCIRoutes = [
+      huskyCIAuthorRoute,
+      huskyCIAnalysisRoute,
+      huskyCILanguageRoute,
+      huskyCIContainerRoute,
+      huskyCIRepositoryRoute,
+    ];
+    huskyCIRoutes.map(async (huskyRoute) => {
+      const status = await this.callHuskyAPI(huskyRoute);
+      if (status !== 200) {
+        clearInterval(this.timeoutID);
+      }
     });
   }
 
@@ -275,6 +314,10 @@ class Dashboard extends React.Component {
 
     const { repositories } = this.state;
 
+    const { snackOpen } = this.state;
+    const { variantValue } = this.state;
+    const { snackMessage } = this.state;
+
     return (
       <div>
         <Row>
@@ -336,6 +379,13 @@ class Dashboard extends React.Component {
             </Paper>
           </div>
         </Row>
+        <SnackComponent
+          open={snackOpen}
+          duration={null}
+          onClose={this.closeSnack}
+          variant={variantValue}
+          message={snackMessage}
+        />
       </div>
     );
   }
