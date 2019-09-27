@@ -61,3 +61,5 @@ typings/
 .env
 
 tsuru.yml
+
+build/
