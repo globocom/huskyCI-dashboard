@@ -18,6 +18,19 @@ const styles = {
     height: 100,
   },
 };
+const snackDurationInMS = 5000
+const chartOptions = {
+  legend: {
+    display: false
+  },
+  scales: {
+    yAxes: [{
+      ticks: {
+        min: 0
+      }
+    }]
+  }
+}
 
 const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
 const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`;
@@ -356,7 +369,7 @@ class Dashboard extends Component {
                 width={boxSizeWidth}
                 height={boxSizeHeight}
                 data={infoAnalysis}
-                legend={{ display: false }}
+                options={chartOptions}
               />
             </Paper>
           </div>
@@ -366,7 +379,7 @@ class Dashboard extends Component {
                 width={boxSizeWidth}
                 height={boxSizeHeight}
                 data={infoLanguages}
-                legend={{ display: false }}
+                options={chartOptions}
               />
             </Paper>
           </div>
@@ -376,14 +389,14 @@ class Dashboard extends Component {
                 width={boxSizeWidth}
                 height={boxSizeHeight}
                 data={infoContainers}
-                legend={{ display: false }}
+                options={chartOptions}
               />
             </Paper>
           </div>
         </Row>
         <SnackComponent
           open={snackOpen}
-          duration={null}
+          duration={snackDurationInMS}
           onClose={this.closeSnack}
           variant={variantValue}
           message={snackMessage}
