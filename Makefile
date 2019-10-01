@@ -9,36 +9,18 @@ COLOR_RED = \033[31m
 
 PROJECT := huskyCI-dashboard
 
-## Installs locally using install command.
-install:
-	yarn install
 
 ## Builds static files from react app.
 build:
 	yarn build
 
-## Runs locally using start command.
-run:
-	yarn start
-	
+## Creates a container image based on most recent dashboard code
+build-container:
+	docker build . -t huskyci/dashboard:latest
+
 ## Checks for vulnerabilities using audit command.
 check-sec:
 	yarn audit
-
-## Runs a full test into project.
-test: 
-	yarn test
-
-## Creates a container image based on most recent dashboard code
-build-container: 
-	docker build . -t huskyci/dashboard
-
-## Starts huskyci/dashboard container
-start-container: 
-	docker run -p 8080:80 huskyci/dashboard
-
-## Builds and starts dashboard add using huskyci/dashboard container
-run-container: build-container start-container
 
 ## Shows this help message.
 help:
@@ -53,3 +35,27 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST) | sort
 	printf "\n"
+
+## Installs locally using install command.
+install:
+	yarn install
+
+## Push dashboard container to hub.docker
+push-container:
+	chmod +x push-container.sh
+	./push-container.sh
+
+## Runs locally using start command.
+run:
+	yarn start
+
+## Builds and starts dashboard add using huskyci/dashboard container
+run-container: build-container start-container
+
+## Runs a full test into project.
+test:
+	yarn test
+
+## Starts huskyci/dashboard container
+start-container:
+	docker run -p 8080:80 huskyci/dashboard
