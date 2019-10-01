@@ -18,7 +18,7 @@ const styles = {
     height: 100,
   },
 };
-
+const snackDurationInMS = 5000
 const chartOptions = {
   legend: {
     display: false
@@ -396,7 +396,7 @@ class Dashboard extends Component {
         </Row>
         <SnackComponent
           open={snackOpen}
-          duration={5000}
+          duration={snackDurationInMS}
           onClose={this.closeSnack}
           variant={variantValue}
           message={snackMessage}
