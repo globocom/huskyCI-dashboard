@@ -82,10 +82,12 @@ class Dashboard extends Component {
     }
     if (huskyRoute === huskyCIAuthorRoute) {
       response.json().then((authorResultJSON) => {
-        const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
-        const { numAuthors } = this.state;
-        if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
-          this.setState({ numAuthors: newNumAuthorsResult });
+        if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
+          const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
+          const { numAuthors } = this.state;
+          if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
+            this.setState({ numAuthors: newNumAuthorsResult });
+          }
         }
       });
     }
