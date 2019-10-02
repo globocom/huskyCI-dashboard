@@ -4,6 +4,7 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 */
 
+import "./Dashboard.css"
 import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
@@ -39,7 +40,6 @@ const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 
-const boxMargin = 8;
 const boxSizeWidth = 400;
 const boxSizeHeight = 300;
 
@@ -122,7 +122,7 @@ class Dashboard extends Component {
           }
         });
         const totalAnalyses = numFailedResult
-            + numWarningResult + numPassedResult + numErrorResult;
+          + numWarningResult + numPassedResult + numErrorResult;
         const { numAnalysis } = this.state;
         if (!_.isEqual(numAnalysis, totalAnalyses)) {
           this.setState({
@@ -336,35 +336,14 @@ class Dashboard extends Component {
     return (
       <div>
         <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
+          <Col>
+            <Paper className="paper">
               <div className="metric-container">
                 <span className="title-box">Developers</span>
                 <span className="metric-value">{numAuthors}</span>
               </div>
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
-              <div className="metric-container">
-                <span className="title-box">Analyses</span>
-                <span className="metric-value">{numAnalysis}</span>
-              </div>
-            </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
-              <div className="metric-container">
-                <span className="title-box">Repositories</span>
-                <br />
-                <span className="metric-value">{repositories}</span>
-              </div>
-            </Paper>
-          </div>
-        </Row>
-        <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-            <Paper>
+            <Paper className="paper">
               <Bar
                 width={boxSizeWidth}
                 height={boxSizeHeight}
@@ -372,9 +351,15 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-            <Paper>
+          </Col>
+          <Col>
+            <Paper className="paper">
+              <div className="metric-container">
+                <span className="title-box">Analyses</span>
+                <span className="metric-value">{numAnalysis}</span>
+              </div>
+            </Paper>
+            <Paper className="paper">
               <Bar
                 width={boxSizeWidth}
                 height={boxSizeHeight}
@@ -382,9 +367,16 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-            <Paper>
+          </Col>
+          <Col>
+            <Paper className="paper">
+              <div className="metric-container">
+                <span className="title-box">Repositories</span>
+                <br />
+                <span className="metric-value">{repositories}</span>
+              </div>
+            </Paper>
+            <Paper className="paper">
               <Bar
                 width={boxSizeWidth}
                 height={boxSizeHeight}
@@ -392,7 +384,7 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
+          </Col>
         </Row>
         <SnackComponent
           open={snackOpen}
@@ -410,10 +402,15 @@ const Row = ({ children }) => (
   <div
     style={{
       margin: 16,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
     }}
+  >
+    {children}
+  </div>
+);
+
+const Col = ({ children }) => (
+  <div
+    className="responsive-col"
   >
     {children}
   </div>

@@ -1,0 +1,46 @@
+.metric-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.metric-value {
+    color: rgb(61, 69, 114);
+    font-size: 85px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.title-box {
+    color: #6e6e6e;
+    font-size: 20px;
+    width: 100%;
+    padding-top: 5%;
+}
+
+.responsive-col {
+    padding: 10px;
+    height: 150;
+    display: inline-block;
+}
+
+.paper {
+    text-align: center;
+}
+
+@media (min-width: 1200px) {
+    .responsive-col {
+        width: 33%;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1199px) {
+    .responsive-col {
+        width: 50%;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 799px) {
+    .responsive-col {
+        width: 100%;
+    }
+}
