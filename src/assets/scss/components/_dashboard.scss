@@ -1,0 +1,44 @@
+.dashboard {
+	&__card,
+	&__chart {
+		margin: 8px;
+		// width: 400px;
+		// height: 150px;
+	}
+	&__card {
+		flex: 1;
+	}
+	&__row,
+	&__chart-container {
+		width: 100%;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	&__card-container {
+		width: 100%;
+		max-width: 1000px;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+@media only screen and (max-width: 900px) {
+	.dashboard {
+		&__chart-container {
+			flex-direction: column;
+		}
+	}
+}
+@media only screen and (max-width: 740px) {
+	.dashboard {
+		&__card {
+			width: 80%;
+		}
+		&__row {
+			flex-direction: column;
+		}
+	}
+}

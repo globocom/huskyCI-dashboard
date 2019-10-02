@@ -8,6 +8,7 @@
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
     "lodash": "^4.17.15",
+    "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-chartjs-2": "^2.7.6",
@@ -17,9 +18,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "lint": "node_modules/eslint/bin/eslint.js --ext .js --ext .jsx .",
     "test": "CI=true react-scripts test --env=jsdom",
+    "lint": "node_modules/eslint/bin/eslint.js --ext .js --ext .jsx .",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
