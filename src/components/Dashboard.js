@@ -259,18 +259,46 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { filters } = this.state;
+
     const { languages } = this.state;
-    const numGoFound = languages.go;
-    const numPythonFound = languages.python;
-    const numRubyFound = languages.ruby;
-    const numJavaScriptFound = languages.javascript;
+    const languagesFilter = filters.languages;
+    const resultsLanguagesData = {
+      Golang: {
+        data: languages.go,
+        bgColor: colorBlue,
+        hoverBgColor: colorBlueHover,
+      },
+      Python: {
+        data: languages.python,
+        bgColor: colorGreen,
+        hoverBgColor: colorGreenHover,
+      },
+      Ruby: {
+        data: languages.ruby,
+        bgColor: colorRed,
+        hoverBgColor: colorRedHover,
+      },
+      JavaScript: {
+        data: languages.javascript,
+        bgColor: colorYellow,
+        hoverBgColor: colorYellowHover,
+      },
+    };
+    let filteredLanguagesData = resultsLanguagesData;
+    if (filters.languages.length) {
+      const languagesKeys = Object.keys(resultsLanguagesData);
+      filteredLanguagesData = languagesKeys
+        .filter((key) => languagesFilter.includes(key))
+        .reduce((obj, key) => Object.assign(obj, { [key]: resultsLanguagesData[key] }), {});
+    }
     const infoLanguages = {
-      labels: ['Golang', 'Python', 'Ruby', 'JavaScript'],
+      labels: Object.keys(filteredLanguagesData),
       datasets: [
         {
-          data: [numGoFound, numPythonFound, numRubyFound, numJavaScriptFound],
-          backgroundColor: [colorBlue, colorGreen, colorRed, colorYellow],
-          hoverBackgroundColor: [colorBlueHover, colorGreenHover, colorRedHover, colorYellowHover],
+          data: Object.values(filteredLanguagesData).map((e) => e.data),
+          backgroundColor: Object.values(filteredLanguagesData).map((e) => e.bgColor),
+          hoverBackgroundColor: Object.values(filteredLanguagesData).map((e) => e.hoverBgColor),
         },
       ],
     };
