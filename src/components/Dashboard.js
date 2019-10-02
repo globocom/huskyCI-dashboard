@@ -11,6 +11,7 @@ import { Paper } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
+import Filter from './Filter';
 
 const styles = {
   root: {
@@ -242,6 +243,16 @@ class Dashboard extends Component {
     });
   }
 
+  setFilterHandler = (key, newFilters) => {
+    const { filters } = this.state;
+    this.setState({
+      filters: {
+        ...filters,
+        [key]: newFilters,
+      },
+    });
+  }
+
   refreshCharts = () => {
     const huskyCIRoutes = [
       huskyCIAuthorRoute,
@@ -409,6 +420,12 @@ class Dashboard extends Component {
 
     return (
       <div>
+        <Row>
+          <div style={{ height: '35px', display: 'flex', alignItems: 'flex-end' }}>Filter by:</div>
+          <Filter label="Vulnerability Type" filterName="analysis" selectedValues={analysisFilter} options={Object.keys(resultsAnalysisData)} values={Object.keys(resultsAnalysisData)} onChange={this.setFilterHandler} />
+          <Filter label="Language" filterName="languages" selectedValues={languagesFilter} options={Object.keys(resultsLanguagesData)} values={Object.keys(resultsLanguagesData)} onChange={this.setFilterHandler} />
+          <Filter label="Container" filterName="containers" selectedValues={containersFilter} options={Object.keys(resultsContainersData)} values={Object.keys(resultsContainersData)} onChange={this.setFilterHandler} />
+        </Row>
         <Row>
           <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
             <Paper>
