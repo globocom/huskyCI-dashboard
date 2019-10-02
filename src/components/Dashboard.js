@@ -76,12 +76,14 @@ class Dashboard extends Component {
       variantValue: '',
       snackMessage: '',
     };
+    this.updateRefreshRate = this.updateRefreshRate.bind(this);
+    this.refreshRate = 10000;
     this.timeoutID = 0;
     this.refreshCharts();
   }
 
   componentDidMount() {
-    this.timeoutID = setInterval(this.refreshCharts.bind(this), 10000);
+    this.timeoutID = setInterval(this.refreshCharts.bind(this), this.refreshRate);
   }
 
   componentWillUnmount() {
@@ -253,6 +255,13 @@ class Dashboard extends Component {
     });
   }
 
+
+  updateRefreshRate = (time) => {
+    this.refreshRate = time;
+    clearInterval(this.timeoutID);
+    this.componentDidMount();
+  }
+
   render() {
     const { languages } = this.state;
     const numGoFound = languages.go;
@@ -335,6 +344,17 @@ class Dashboard extends Component {
 
     return (
       <div>
+        <Row>
+          <div
+            className="refrest-rate-menu"
+          >
+            <p style={{ display: 'inline' }}>Refresh Rate:</p>
+            <button type="button" onClick={(e) => this.updateRefreshRate(10000)} style={{ margin: boxMargin }}>10 seconds</button>
+            <button type="button" onClick={(e) => this.updateRefreshRate(30000)} style={{ margin: boxMargin }}>30 seconds</button>
+            <button type="button" onClick={(e) => this.updateRefreshRate(60000)} style={{ margin: boxMargin }}>60 seconds</button>
+            <button type="button" onClick={(e) => this.updateRefreshRate(300000)} style={{ margin: boxMargin }}>5 minutes</button>
+          </div>
+        </Row>
         <Row>
           <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
             <Paper>
