@@ -75,6 +75,11 @@ class Dashboard extends Component {
       snackOpen: false,
       variantValue: '',
       snackMessage: '',
+      filters: {
+        languages: [],
+        analysis: [],
+        containers: [],
+      },
     };
     this.timeoutID = 0;
     this.refreshCharts();
