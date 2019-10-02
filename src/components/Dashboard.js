@@ -303,17 +303,43 @@ class Dashboard extends Component {
       ],
     };
     const { resultsAnalysis } = this.state;
-    const numFailedFound = [resultsAnalysis.failed];
-    const numWarningFound = [resultsAnalysis.warning];
-    const numPassedFound = [resultsAnalysis.passed];
-    const numErrorFound = [resultsAnalysis.error];
+    const analysisFilter = filters.analysis;
+    const resultsAnalysisData = {
+      Failed: {
+        data: [resultsAnalysis.failed],
+        bgColor: colorRed,
+        hoverBgColor: colorRedHover,
+      },
+      Warning: {
+        data: [resultsAnalysis.warning],
+        bgColor: colorYellow,
+        hoverBgColor: colorYellowHover,
+      },
+      Passed: {
+        data: [resultsAnalysis.passed],
+        bgColor: colorGreen,
+        hoverBgColor: colorGreenHover,
+      },
+      Error: {
+        data: [resultsAnalysis.error],
+        bgColor: colorGray,
+        hoverBgColor: colorGrayHover,
+      },
+    };
+    let filteredAnalysisData = resultsAnalysisData;
+    if (filters.analysis.length) {
+      const analysisKeys = Object.keys(resultsAnalysisData);
+      filteredAnalysisData = analysisKeys
+        .filter((key) => analysisFilter.includes(key))
+        .reduce((obj, key) => Object.assign(obj, { [key]: resultsAnalysisData[key] }), {});
+    }
     const infoAnalysis = {
-      labels: ['Failed', 'Warning', 'Passed', 'Error'],
+      labels: Object.keys(filteredAnalysisData),
       datasets: [
         {
-          data: [numFailedFound, numWarningFound, numPassedFound, numErrorFound],
-          backgroundColor: [colorRed, colorYellow, colorGreen, colorGray],
-          hoverBackgroundColor: [colorRedHover, colorYellowHover, colorGreenHover, colorGrayHover],
+          data: Object.values(filteredAnalysisData).map((e) => e.data),
+          backgroundColor: Object.values(filteredAnalysisData).map((e) => e.bgColor),
+          hoverBackgroundColor: Object.values(filteredAnalysisData).map((e) => e.hoverBgColor),
         },
       ],
     };
