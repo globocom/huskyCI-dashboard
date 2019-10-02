@@ -26,9 +26,6 @@ const filterStyles = makeStyles((theme) => ({
     minWidth: 200,
     maxWidth: 500,
   },
-  formLabel: {
-    lineHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-  },
   chips: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -37,8 +34,6 @@ const filterStyles = makeStyles((theme) => ({
     margin: 2,
   },
 }));
-
-
 
 const FilterComponent = (props) => {
   const {
@@ -78,6 +73,7 @@ const FilterComponent = (props) => {
 
 FilterComponent.propTypes = {
   filterName: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.string).isRequired,
   values: PropTypes.arrayOf(PropTypes.string).isRequired,
