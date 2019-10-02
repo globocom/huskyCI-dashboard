@@ -18,19 +18,19 @@ const styles = {
     height: 100,
   },
 };
-const snackDurationInMS = 5000
+const snackDurationInMS = 5000;
 const chartOptions = {
   legend: {
-    display: false
+    display: false,
   },
   scales: {
     yAxes: [{
       ticks: {
-        min: 0
-      }
-    }]
-  }
-}
+        min: 0,
+      },
+    }],
+  },
+};
 
 const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
 const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`;
