@@ -7,15 +7,16 @@ license that can be found in the LICENSE file.
 import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
+import { Paper, Grid } from '@material-ui/core';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
 
 const styles = {
   root: {
-    width: 100,
-    height: 100,
+    flexGrow: 1,
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '0 30px',
   },
 };
 const snackDurationInMS = 5000;
@@ -334,36 +335,36 @@ class Dashboard extends Component {
     const { snackMessage } = this.state;
 
     return (
-      <div>
-        <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
+      <div style={styles.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={4}>
+            <Paper className={styles.paper}>
               <div className="metric-container">
                 <span className="title-box">Developers</span>
                 <span className="metric-value">{numAuthors}</span>
               </div>
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Paper className={styles.paper}>
               <div className="metric-container">
                 <span className="title-box">Analyses</span>
                 <span className="metric-value">{numAnalysis}</span>
               </div>
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Paper className={styles.paper}>
               <div className="metric-container">
                 <span className="title-box">Repositories</span>
                 <br />
                 <span className="metric-value">{repositories}</span>
               </div>
             </Paper>
-          </div>
-        </Row>
-        <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={4}>
             <Paper>
               <Bar
                 width={boxSizeWidth}
@@ -372,8 +373,8 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Paper>
               <Bar
                 width={boxSizeWidth}
@@ -382,8 +383,8 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Paper>
               <Bar
                 width={boxSizeWidth}
@@ -392,8 +393,8 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-        </Row>
+          </Grid>
+        </Grid>
         <SnackComponent
           open={snackOpen}
           duration={snackDurationInMS}
