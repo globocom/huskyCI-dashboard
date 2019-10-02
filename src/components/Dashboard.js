@@ -40,7 +40,6 @@ const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 
-const boxMargin = 8;
 const boxSizeWidth = 400;
 const boxSizeHeight = 300;
 
@@ -406,22 +405,5 @@ class Dashboard extends Component {
     );
   }
 }
-
-const Row = ({ children }) => (
-  <div
-    style={{
-      margin: 16,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    {children}
-  </div>
-);
-
-Row.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default withStyles(styles)(Dashboard);
