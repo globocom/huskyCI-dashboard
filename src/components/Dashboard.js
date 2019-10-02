@@ -343,44 +343,59 @@ class Dashboard extends Component {
         },
       ],
     };
+
     const { containers } = this.state;
-    const numGosecFound = containers.gosec;
-    const numNpmauditFound = containers.npmAudit;
-    const numYarnauditFound = containers.yarnAudit;
-    const numBrakemanFound = containers.brakeman;
-    const numSafetyFound = containers.safety;
-    const numBanditFound = containers.bandit;
+    const containersFilter = filters.containers;
+    const resultsContainersData = {
+      Gosec: {
+        data: containers.gosec,
+        bgColor: colorBlue,
+        hoverBgColor: colorBlueHover,
+      },
+      'Npm Audit': {
+        data: containers.npmAudit,
+        bgColor: colorPurple,
+        hoverBgColor: colorPurpleHover,
+      },
+      'Yarn Audit': {
+        data: containers.yarnAudit,
+        bgColor: colorGray,
+        hoverBgColor: colorGrayHover,
+      },
+      Brakeman: {
+        data: containers.brakeman,
+        bgColor: colorRed,
+        hoverBgColor: colorRedHover,
+      },
+      Safety: {
+        data: containers.safety,
+        bgColor: colorGreen,
+        hoverBgColor: colorGreenHover,
+      },
+      Bandit: {
+        data: containers.bandit,
+        bgColor: colorYellow,
+        hoverBgColor: colorYellowHover,
+      },
+    };
+    let filteredContainersData = resultsContainersData;
+    if (filters.containers.length) {
+      const containersKeys = Object.keys(resultsContainersData);
+      filteredContainersData = containersKeys
+        .filter((key) => containersFilter.includes(key))
+        .reduce((obj, key) => Object.assign(obj, { [key]: resultsContainersData[key] }), {});
+    }
     const infoContainers = {
-      labels: ['Gosec', 'Npm Audit', 'Yarn Audit', 'Brakeman', 'Safety', 'Bandit'],
+      labels: Object.keys(filteredContainersData),
       datasets: [
         {
-          data: [
-            numGosecFound,
-            numNpmauditFound,
-            numYarnauditFound,
-            numBrakemanFound,
-            numSafetyFound,
-            numBanditFound,
-          ],
-          backgroundColor: [
-            colorBlue,
-            colorPurple,
-            colorGray,
-            colorRed,
-            colorGreen,
-            colorYellow,
-          ],
-          hoverBackgroundColor: [
-            colorBlueHover,
-            colorPurpleHover,
-            colorGrayHover,
-            colorRedHover,
-            colorGreenHover,
-            colorYellowHover,
-          ],
+          data: Object.values(filteredContainersData).map((e) => e.data),
+          backgroundColor: Object.values(filteredContainersData).map((e) => e.bgColor),
+          hoverBackgroundColor: Object.values(filteredContainersData).map((e) => e.hoverBgColor),
         },
       ],
     };
+
 
     const { numAuthors } = this.state;
 
