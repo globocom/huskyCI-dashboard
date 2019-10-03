@@ -10,7 +10,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Paper } from '@material-ui/core';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
 
 const styles = {
@@ -40,7 +39,6 @@ const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 
-const boxMargin = 8;
 const boxSizeWidth = 400;
 const boxSizeHeight = 300;
 
@@ -407,22 +405,5 @@ class Dashboard extends Component {
     );
   }
 }
-
-const Row = ({ children }) => (
-  <div
-    style={{
-      margin: 16,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    {children}
-  </div>
-);
-
-Row.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default withStyles(styles)(Dashboard);
