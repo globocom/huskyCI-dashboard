@@ -1,0 +1,113 @@
+div {
+    box-sizing: border-box
+}
+
+.top-bar {
+    background-color: #24292e;
+    height: 64px;
+    display: flex;
+}
+
+.top-bar .logo-container {
+    flex: 0;
+}
+
+.top-bar .logo-container .logo {
+    height: 50px;
+    padding: 10px 20px;
+}
+
+.top-bar .menu-container {
+    flex: 1;
+    text-align: left;
+}
+
+.top-bar .menu-container ul {
+    margin: 0px;
+    padding: 22px;
+    border: 0px;
+}
+
+.top-bar .menu-container ul li {
+    display: inline;
+    padding: 0px 10px;
+    color: #fefefe;
+}
+
+.top-bar .user-container {
+    width: 300px;
+    text-align: right;
+    display: flex;
+}
+
+.top-bar .user-container .user-picture-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+}
+
+.top-bar .user-container .user-picture-container .user-picture {
+    border-radius: 50%;
+}
+
+.top-bar .user-container .user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-bar .user-container .user-info .user-username {
+    width: 100%;
+    text-align: right;
+    color: #ccc;
+    white-space: nowrap;
+}
+
+.top-bar .user-container .user-info .user-name {
+    width: 100%;
+    text-align: right;
+    color: #fff;
+    white-space: nowrap;
+}
+
+@media (min-width: 1200px) {
+    .top-bar {
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1199px) {
+    .top-bar {
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 799px) {
+    .top-bar {
+        flex-direction: column;
+        height: auto;
+        width: 100vw;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+    .top-bar .menu-container {
+        text-align: center;
+    }
+    .top-bar .user-container {
+        width: auto;
+        text-align: center;
+        flex-flow: row-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+    .top-bar .user-container .user-info .user-username {
+        text-align: left;
+    }
+    .top-bar .user-container .user-info .user-name {
+        text-align: left;
+    }
+}
