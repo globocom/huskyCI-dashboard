@@ -11,6 +11,7 @@ import { Paper } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
+import Filter from './Filter';
 
 const styles = {
   root: {
@@ -253,6 +254,10 @@ class Dashboard extends Component {
     });
   }
 
+  applyFilter = () => {
+    alert('Applying filter!')
+  }
+
   render() {
     const { languages } = this.state;
     const numGoFound = languages.go;
@@ -335,6 +340,55 @@ class Dashboard extends Component {
 
     return (
       <div>
+        <Row>
+          <div>
+            <Filter 
+              options={[
+                {
+                  value: '',
+                  label: 'Language'
+                },
+                {
+                  value: '1',
+                  label: 'JS'
+                },
+                {
+                  value: '2',
+                  label: 'PHP'
+                },
+              ]}
+            />
+            <Filter 
+              options={[
+                {
+                  value: '',
+                  label: 'Vulnerability'
+                },
+                {
+                  value: '1',
+                  label: '10'
+                },
+                {
+                  value: '2',
+                  label: '20'
+                },
+              ]}
+            />
+            <button 
+              onClick={this.applyFilter}
+              style={{
+                cursor: 'pointer',
+                height: '30px',
+                borderRadius: '4px',
+                color: '#fff',
+                background: '#3d4572',
+                border: 'transparent',
+                fontWeight: 700,
+                width: '75px',
+              }}
+            >Filter!</button>
+          </div>
+        </Row>
         <Row>
           <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
             <Paper>
