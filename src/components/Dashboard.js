@@ -7,9 +7,9 @@ license that can be found in the LICENSE file.
 import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import { Paper } from '@material-ui/core';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
 
 const styles = {
@@ -39,7 +39,6 @@ const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 
-const boxMargin = 8;
 const boxSizeWidth = 400;
 const boxSizeHeight = 300;
 
@@ -335,24 +334,24 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
+        <Grid container spacing={3} style={{padding: '1rem'}}>
+          <Grid item xs={12} sm={4}>
             <Paper>
               <div className="metric-container">
                 <span className="title-box">Developers</span>
                 <span className="metric-value">{numAuthors}</span>
               </div>
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Paper>
               <div className="metric-container">
                 <span className="title-box">Analyses</span>
                 <span className="metric-value">{numAnalysis}</span>
               </div>
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Paper>
               <div className="metric-container">
                 <span className="title-box">Repositories</span>
@@ -360,10 +359,11 @@ class Dashboard extends Component {
                 <span className="metric-value">{repositories}</span>
               </div>
             </Paper>
-          </div>
-        </Row>
-        <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} style={{padding: '1rem'}}>
+          <Grid item xs={12} md={4}>
             <Paper>
               <Bar
                 width={boxSizeWidth}
@@ -372,8 +372,8 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <Paper>
               <Bar
                 width={boxSizeWidth}
@@ -382,8 +382,8 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <Paper>
               <Bar
                 width={boxSizeWidth}
@@ -392,8 +392,8 @@ class Dashboard extends Component {
                 options={chartOptions}
               />
             </Paper>
-          </div>
-        </Row>
+          </Grid>
+        </Grid>
         <SnackComponent
           open={snackOpen}
           duration={snackDurationInMS}
@@ -405,22 +405,5 @@ class Dashboard extends Component {
     );
   }
 }
-
-const Row = ({ children }) => (
-  <div
-    style={{
-      margin: 16,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    {children}
-  </div>
-);
-
-Row.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default withStyles(styles)(Dashboard);
