@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.4.3",
+    "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
     "lodash": "^4.17.15",
@@ -12,12 +13,12 @@
     "react": "^16.9.0",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.2"
+    "react-scripts": "3.1.2",
+    "reactstrap": "^8.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "lint": "node_modules/eslint/bin/eslint.js --ext .js --ext .jsx .",
     "test": "CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

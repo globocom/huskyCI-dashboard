@@ -8,6 +8,13 @@ import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
+import {
+  Navbar,
+  Nav,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem } from 'reactstrap';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
@@ -75,6 +82,7 @@ class Dashboard extends Component {
       snackOpen: false,
       variantValue: '',
       snackMessage: '',
+      refresh: '',
     };
     this.updateRefreshRate = this.updateRefreshRate.bind(this);
     this.refreshRate = 10000;
@@ -84,6 +92,23 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.timeoutID = setInterval(this.refreshCharts.bind(this), this.refreshRate);
+    switch(this.refreshRate) {
+      case 10000:
+        this.state.refresh = '10s';
+        break;
+      case 30000:
+        this.state.refresh = '30s';
+        break;
+      case 60000:
+        this.state.refresh = '60s';
+        break;
+      case 600000:
+        this.state.refresh = '5m';
+        break;
+      default:
+        this.state.refresh = '';
+        break;
+    }
   }
 
   componentWillUnmount() {
@@ -258,7 +283,8 @@ class Dashboard extends Component {
 
   updateRefreshRate = (time) => {
     this.refreshRate = time;
-    clearInterval(this.timeoutID);
+    if (this.timeoutID)
+      clearInterval(this.timeoutID);
     this.componentDidMount();
   }
 
@@ -344,17 +370,31 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <Row>
-          <div
-            className="refrest-rate-menu"
-          >
-            <p style={{ display: 'inline' }}>Refresh Rate:</p>
-            <button type="button" onClick={(e) => this.updateRefreshRate(10000)} style={{ margin: boxMargin }}>10 seconds</button>
-            <button type="button" onClick={(e) => this.updateRefreshRate(30000)} style={{ margin: boxMargin }}>30 seconds</button>
-            <button type="button" onClick={(e) => this.updateRefreshRate(60000)} style={{ margin: boxMargin }}>60 seconds</button>
-            <button type="button" onClick={(e) => this.updateRefreshRate(300000)} style={{ margin: boxMargin }}>5 minutes</button>
-          </div>
-        </Row>
+        <div className="w-100">
+          <Navbar className="w100" color="light" light expand="md">
+            <Nav className="ml-auto" navbar>
+              <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  Refresh Rate
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem active={this.state.refresh === '10s'} id="10s" onClick={(e) => this.updateRefreshRate(10000)}>
+                    10 seconds
+                  </DropdownItem>
+                  <DropdownItem active={this.state.refresh === '30s'} id="30s" onClick={(e) => this.updateRefreshRate(30000)}>
+                    30 seconds
+                  </DropdownItem>
+                  <DropdownItem active={this.state.refresh === '60s'} id="60s" onClick={(e) => this.updateRefreshRate(60000)}>
+                    60 seconds
+                  </DropdownItem>
+                  <DropdownItem active={this.state.refresh === '5m'} id="5m" onClick={(e) => this.updateRefreshRate(300000)}>
+                    5 minutes
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </Nav>
+          </Navbar>
+        </div>
         <Row>
           <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
             <Paper>
