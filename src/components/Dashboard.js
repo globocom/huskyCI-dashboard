@@ -18,19 +18,19 @@ const styles = {
     height: 100,
   },
 };
-const snackDurationInMS = 5000
+const snackDurationInMS = 5000;
 const chartOptions = {
   legend: {
-    display: false
+    display: false,
   },
   scales: {
     yAxes: [{
       ticks: {
-        min: 0
-      }
-    }]
-  }
-}
+        min: 0,
+      },
+    }],
+  },
+};
 
 const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
 const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`;
@@ -374,7 +374,7 @@ Row.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const Metric = ({title, value}) => (
+const Metric = ({ title, value }) => (
   <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
     <Paper>
       <div className="metric-container">
@@ -384,18 +384,26 @@ const Metric = ({title, value}) => (
     </Paper>
   </div>
 );
+Metric.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+};
 
-const Graph = ({data}) => (
+const Graph = ({ data }) => (
   <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
     <Paper>
       <Bar
-          width={boxSizeWidth}
-          height={boxSizeHeight}
-          data={data}
-          options={chartOptions}
+        width={boxSizeWidth}
+        height={boxSizeHeight}
+        data={data}
+        options={chartOptions}
       />
     </Paper>
   </div>
-)
+);
+
+Graph.propTypes = {
+  data: PropTypes.node.isRequired,
+};
 
 export default withStyles(styles)(Dashboard);
