@@ -66,5 +66,8 @@
       "eslint --fix",
       "git add"
     ]
+  },
+  "resolutions": {
+    "react-scripts/typescript": "^3.6.0"
   }
 }
