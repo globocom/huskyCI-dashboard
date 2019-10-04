@@ -336,63 +336,14 @@ class Dashboard extends Component {
     return (
       <div>
         <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
-              <div className="metric-container">
-                <span className="title-box">Developers</span>
-                <span className="metric-value">{numAuthors}</span>
-              </div>
-            </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
-              <div className="metric-container">
-                <span className="title-box">Analyses</span>
-                <span className="metric-value">{numAnalysis}</span>
-              </div>
-            </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-            <Paper>
-              <div className="metric-container">
-                <span className="title-box">Repositories</span>
-                <br />
-                <span className="metric-value">{repositories}</span>
-              </div>
-            </Paper>
-          </div>
+          <Metric title="Developers" value={numAuthors} />
+          <Metric title="Analyses" value={numAnalysis} />
+          <Metric title="Repositories" value={repositories} />
         </Row>
         <Row>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-            <Paper>
-              <Bar
-                width={boxSizeWidth}
-                height={boxSizeHeight}
-                data={infoAnalysis}
-                options={chartOptions}
-              />
-            </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-            <Paper>
-              <Bar
-                width={boxSizeWidth}
-                height={boxSizeHeight}
-                data={infoLanguages}
-                options={chartOptions}
-              />
-            </Paper>
-          </div>
-          <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-            <Paper>
-              <Bar
-                width={boxSizeWidth}
-                height={boxSizeHeight}
-                data={infoContainers}
-                options={chartOptions}
-              />
-            </Paper>
-          </div>
+          <Graph data={infoAnalysis} />
+          <Graph data={infoLanguages} />
+          <Graph data={infoContainers} />
         </Row>
         <SnackComponent
           open={snackOpen}
@@ -422,5 +373,29 @@ const Row = ({ children }) => (
 Row.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+const Metric = ({title, value}) => (
+  <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
+    <Paper>
+      <div className="metric-container">
+        <span className="title-box">{title}</span>
+        <span className="metric-value">{value}</span>
+      </div>
+    </Paper>
+  </div>
+);
+
+const Graph = ({data}) => (
+  <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
+    <Paper>
+      <Bar
+          width={boxSizeWidth}
+          height={boxSizeHeight}
+          data={data}
+          options={chartOptions}
+      />
+    </Paper>
+  </div>
+)
 
 export default withStyles(styles)(Dashboard);
