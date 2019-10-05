@@ -93,19 +93,19 @@ class Dashboard extends Component {
     this.timeoutID = setInterval(this.refreshCharts.bind(this), this.refreshRate);
     switch(this.refreshRate) {
       case 10000:
-        this.state.refresh = '10s';
+        this.setState({refresh: '10s'});
         break;
       case 30000:
-        this.state.refresh = '30s';
+        this.setState({refresh: '30s'});
         break;
       case 60000:
-        this.state.refresh = '60s';
+        this.setState({refresh: '60s'});
         break;
-      case 600000:
-        this.state.refresh = '5m';
+      case 300000:
+        this.setState({refresh: '5m'});
         break;
       default:
-        this.state.refresh = '';
+        this.setState({refresh: ''});
         break;
     }
   }
