@@ -5,12 +5,12 @@ license that can be found in the LICENSE file.
 */
 
 import React, { Component } from 'react';
-import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
+import Metric from './Metric';
+import Graph from './Graph';
 
 const styles = {
   root: {
@@ -19,18 +19,6 @@ const styles = {
   },
 };
 const snackDurationInMS = 5000;
-const chartOptions = {
-  legend: {
-    display: false,
-  },
-  scales: {
-    yAxes: [{
-      ticks: {
-        min: 0,
-      },
-    }],
-  },
-};
 
 const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
 const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`;
@@ -363,7 +351,7 @@ const Row = ({ children }) => (
       margin: 16,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'center'
     }}
   >
     {children}
@@ -372,38 +360,6 @@ const Row = ({ children }) => (
 
 Row.propTypes = {
   children: PropTypes.node.isRequired,
-};
-
-const Metric = ({ title, value }) => (
-  <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight - 150 }}>
-    <Paper>
-      <div className="metric-container">
-        <span className="title-box">{title}</span>
-        <span className="metric-value">{value}</span>
-      </div>
-    </Paper>
-  </div>
-);
-Metric.propTypes = {
-  title: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-};
-
-const Graph = ({ data }) => (
-  <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-    <Paper>
-      <Bar
-        width={boxSizeWidth}
-        height={boxSizeHeight}
-        data={data}
-        options={chartOptions}
-      />
-    </Paper>
-  </div>
-);
-
-Graph.propTypes = {
-  data: PropTypes.node.isRequired,
 };
 
 export default withStyles(styles)(Dashboard);
