@@ -8,14 +8,12 @@ import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Paper } from '@material-ui/core';
-import {
-  Navbar,
-  Nav,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem } from 'reactstrap';
+import { Paper, ClickAwayListener } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
 import _ from 'lodash';
 import SnackComponent from './SnackComponent';
 
@@ -82,6 +80,7 @@ class Dashboard extends Component {
       variantValue: '',
       snackMessage: '',
       refresh: '',
+      refreshRateMenuOpen: false,
     };
     this.updateRefreshRate = this.updateRefreshRate.bind(this);
     this.refreshRate = 10000;
@@ -263,6 +262,14 @@ class Dashboard extends Component {
     });
   }
 
+  openRefreshRate = () => {
+    this.setState({refreshRateMenuOpen: true});
+  }
+
+  closeRefreshRateMenu = () => {
+    this.setState({refreshRateMenuOpen: false});
+  }
+
   refreshCharts = () => {
     const huskyCIRoutes = [
       huskyCIAuthorRoute,
@@ -281,6 +288,7 @@ class Dashboard extends Component {
 
 
   updateRefreshRate = (time) => {
+    this.closeRefreshRateMenu();
     this.refreshRate = time;
     if (this.timeoutID)
       clearInterval(this.timeoutID);
@@ -369,31 +377,27 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <div className="w-100">
-          <Navbar className="w100" color="light" light expand="md">
-            <Nav className="ml-auto" navbar>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Refresh Rate
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem active={this.state.refresh === '10s'} id="10s" onClick={(e) => this.updateRefreshRate(10000)}>
-                    10 seconds
-                  </DropdownItem>
-                  <DropdownItem active={this.state.refresh === '30s'} id="30s" onClick={(e) => this.updateRefreshRate(30000)}>
-                    30 seconds
-                  </DropdownItem>
-                  <DropdownItem active={this.state.refresh === '60s'} id="60s" onClick={(e) => this.updateRefreshRate(60000)}>
-                    60 seconds
-                  </DropdownItem>
-                  <DropdownItem active={this.state.refresh === '5m'} id="5m" onClick={(e) => this.updateRefreshRate(300000)}>
-                    5 minutes
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
-          </Navbar>
-        </div>
+        <AppBar position="static">
+          <Toolbar>
+          <div>
+            <Button onClick={this.openRefreshRate} aria-describedby="refresh-rate-dropdown"style={{color: colorGray}}>Refresh Rate</Button>
+            {this.state.refreshRateMenuOpen ? (
+              <div style={{position: 'fixed'}}>
+              <Paper id="refresh-rate-dropdown" style={{display: 'inline-block', position:'absolute', 'margin-left':'auto', 'margin-right':'auto'}}>
+                  <ClickAwayListener onClickAway={this.closeRefreshRateMenu}>
+                    <MenuList>
+                      <MenuItem selected={this.state.refresh === '10s'} id="10s" onClick={(e) => this.updateRefreshRate(10000)}>10 seconds</MenuItem>
+                      <MenuItem selected={this.state.refresh === '30s'} id="30s" onClick={(e) => this.updateRefreshRate(30000)}>30 seconds</MenuItem>
+                      <MenuItem selected={this.state.refresh === '60s'} id="60s" onClick={(e) => this.updateRefreshRate(60000)}>60 seconds</MenuItem>
+                      <MenuItem selected={this.state.refresh === '5m'} id="5m" onClick={(e) => this.updateRefreshRate(300000)}>5 minutes</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+              </Paper>
+              </div>
+            ) : null}
+          </div>
+          </Toolbar>
+        </AppBar>
         <Grid container spacing={3} style={{padding: '1rem'}}>
           <Grid item xs={12} sm={4}>
             <Paper>
