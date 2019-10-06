@@ -8,10 +8,10 @@
     "jest": true,
   },
   "parserOptions": {
-      ecmaFeatures: {
-          jsx: true,
+      "ecmaFeatures": {
+          "jsx": true
       },
-      sourceType: "module"
+      "sourceType": "module"
   },
   "settings": {
     "react": {

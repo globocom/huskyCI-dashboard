@@ -6,8 +6,9 @@ license that can be found in the LICENSE file.
 
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import { Paper } from '@material-ui/core';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import SnackComponent from './SnackComponent';
 import Metric from './Metric';
 import Graph from './Graph';
@@ -27,7 +28,6 @@ const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 
-const boxMargin = 8;
 const boxSizeWidth = 400;
 const boxSizeHeight = 300;
 
@@ -323,16 +323,30 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <Row>
-          <Metric title="Developers" value={numAuthors} />
-          <Metric title="Analyses" value={numAnalysis} />
-          <Metric title="Repositories" value={repositories} />
-        </Row>
-        <Row>
-          <Graph data={infoAnalysis} />
-          <Graph data={infoLanguages} />
-          <Graph data={infoContainers} />
-        </Row>
+        <Grid container spacing={3} style={{padding: '1rem'}}>
+          <Grid item xs={12} sm={4}>
+            <Metric title="Developers" value={numAuthors} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Metric title="Analyses" value={numAnalysis} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Metric title="Repositories" value={repositories} />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} style={{padding: '1rem'}}>
+          <Grid item xs={12} md={4}>
+            <Graph data={infoAnalysis} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Graph data={infoLanguages} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Graph data={infoContainers} />
+          </Grid>
+        </Grid>
+
         <SnackComponent
           open={snackOpen}
           duration={snackDurationInMS}
@@ -344,22 +358,5 @@ class Dashboard extends Component {
     );
   }
 }
-
-const Row = ({ children }) => (
-  <div
-    style={{
-      margin: 16,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}
-  >
-    {children}
-  </div>
-);
-
-Row.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default withStyles(styles)(Dashboard);
