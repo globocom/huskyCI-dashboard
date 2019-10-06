@@ -6,19 +6,12 @@ import React from 'react';
 const Metric = ({
   boxMargin, boxSizeWidth, boxSizeHeight, title, value,
 }) => (
-  <div style={{
-    margin: boxMargin,
-    width: boxSizeWidth,
-    height: boxSizeHeight - 150,
-  }}
-  >
-    <Paper>
-      <div className="metric-container">
-        <span className="title-box">{title}</span>
-        <span className="metric-value">{value}</span>
-      </div>
-    </Paper>
-  </div>
+  <Paper>
+    <div className="metric-container">
+      <span className="title-box">{title}</span>
+      <span className="metric-value">{value}</span>
+    </div>
+  </Paper>
 );
 
 Metric.defaultProps = {

@@ -17,16 +17,14 @@ const chartOptions = {
 };
 
 const Graph = ({ boxMargin, boxSizeWidth, boxSizeHeight, data }) => (
-  <div style={{ margin: boxMargin, width: boxSizeWidth, height: boxSizeHeight }}>
-    <Paper>
-      <Bar
-        width={boxSizeWidth}
-        height={boxSizeHeight}
-        data={data}
-        options={chartOptions}
-      />
-    </Paper>
-  </div>
+  <Paper>
+    <Bar
+      width={boxSizeWidth}
+      height={boxSizeHeight}
+      data={data}
+      options={chartOptions}
+    />
+  </Paper>
 );
 
 Graph.defaultProps = {
