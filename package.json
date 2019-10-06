@@ -5,7 +5,6 @@
   "dependencies": {
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.4.3",
-    "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
     "lodash": "^4.17.15",
