@@ -9,7 +9,7 @@ import { Bar } from 'react-chartjs-2';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Paper } from '@material-ui/core';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import SnackComponent from './SnackComponent';
 
 const styles = {
@@ -97,7 +97,7 @@ class Dashboard extends Component {
         if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
           const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
           const { numAuthors } = this.state;
-          if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
+          if (!isEqual(numAuthors, newNumAuthorsResult)) {
             this.setState({ numAuthors: newNumAuthorsResult });
           }
         }
@@ -107,23 +107,23 @@ class Dashboard extends Component {
       response.json().then((analysisResultJSON) => {
         let [numFailedResult, numWarningResult, numPassedResult, numErrorResult] = [0, 0, 0, 0];
         Object.keys(analysisResultJSON).forEach((key) => {
-          if (_.isEqual(analysisResultJSON[key].result, 'failed')) {
+          if (isEqual(analysisResultJSON[key].result, 'failed')) {
             numFailedResult = analysisResultJSON[key].count;
           }
-          if (_.isEqual(analysisResultJSON[key].result, 'warning')) {
+          if (isEqual(analysisResultJSON[key].result, 'warning')) {
             numWarningResult = analysisResultJSON[key].count;
           }
-          if (_.isEqual(analysisResultJSON[key].result, 'passed')) {
+          if (isEqual(analysisResultJSON[key].result, 'passed')) {
             numPassedResult = analysisResultJSON[key].count;
           }
-          if (_.isEqual(analysisResultJSON[key].result, 'error')) {
+          if (isEqual(analysisResultJSON[key].result, 'error')) {
             numErrorResult = analysisResultJSON[key].count;
           }
         });
         const totalAnalyses = numFailedResult
             + numWarningResult + numPassedResult + numErrorResult;
         const { numAnalysis } = this.state;
-        if (!_.isEqual(numAnalysis, totalAnalyses)) {
+        if (!isEqual(numAnalysis, totalAnalyses)) {
           this.setState({
             numAnalysis: totalAnalyses,
             resultsAnalysis: {
@@ -140,16 +140,16 @@ class Dashboard extends Component {
       let [numGolangResult, numPythonResult, numRubyResult, numJavaScriptResult] = [0, 0, 0, 0];
       response.json().then((languageResultJSON) => {
         Object.keys(languageResultJSON).forEach((key) => {
-          if (_.isEqual(languageResultJSON[key].language, 'Go')) {
+          if (isEqual(languageResultJSON[key].language, 'Go')) {
             numGolangResult = languageResultJSON[key].count;
           }
-          if (_.isEqual(languageResultJSON[key].language, 'Python')) {
+          if (isEqual(languageResultJSON[key].language, 'Python')) {
             numPythonResult = languageResultJSON[key].count;
           }
-          if (_.isEqual(languageResultJSON[key].language, 'Ruby')) {
+          if (isEqual(languageResultJSON[key].language, 'Ruby')) {
             numRubyResult = languageResultJSON[key].count;
           }
-          if (_.isEqual(languageResultJSON[key].language, 'JavaScript')) {
+          if (isEqual(languageResultJSON[key].language, 'JavaScript')) {
             numJavaScriptResult = languageResultJSON[key].count;
           }
         });
@@ -160,7 +160,7 @@ class Dashboard extends Component {
           javascript: numJavaScriptResult,
         };
         const { languages } = this.state;
-        if (!_.isEqual(languages, totalLanguages)) {
+        if (!isEqual(languages, totalLanguages)) {
           this.setState({ languages: totalLanguages });
         }
       });
@@ -170,22 +170,22 @@ class Dashboard extends Component {
         numSafetyResult, numBanditResult] = [0, 0, 0, 0, 0, 0];
       response.json().then((containerResultJSON) => {
         Object.keys(containerResultJSON).forEach((key) => {
-          if (_.isEqual(containerResultJSON[key].container, 'gosec')) {
+          if (isEqual(containerResultJSON[key].container, 'gosec')) {
             numGosecResult = containerResultJSON[key].count;
           }
-          if (_.isEqual(containerResultJSON[key].container, 'npmaudit')) {
+          if (isEqual(containerResultJSON[key].container, 'npmaudit')) {
             numNpmauditResult = containerResultJSON[key].count;
           }
-          if (_.isEqual(containerResultJSON[key].container, 'yarnaudit')) {
+          if (isEqual(containerResultJSON[key].container, 'yarnaudit')) {
             numYarnauditResult = containerResultJSON[key].count;
           }
-          if (_.isEqual(containerResultJSON[key].container, 'brakeman')) {
+          if (isEqual(containerResultJSON[key].container, 'brakeman')) {
             numBrakemanResult = containerResultJSON[key].count;
           }
-          if (_.isEqual(containerResultJSON[key].container, 'safety')) {
+          if (isEqual(containerResultJSON[key].container, 'safety')) {
             numSafetyResult = containerResultJSON[key].count;
           }
-          if (_.isEqual(containerResultJSON[key].container, 'bandit')) {
+          if (isEqual(containerResultJSON[key].container, 'bandit')) {
             numBanditResult = containerResultJSON[key].count;
           }
         });
@@ -198,7 +198,7 @@ class Dashboard extends Component {
           bandit: numBanditResult,
         };
         const { containers } = this.state;
-        if (!_.isEqual(containers, totalContainers)) {
+        if (!isEqual(containers, totalContainers)) {
           this.setState({ containers: totalContainers });
         }
       });
@@ -208,7 +208,7 @@ class Dashboard extends Component {
       response.json().then((repositoryResultJSON) => {
         newRepositoryResult = repositoryResultJSON[0].totalRepositories;
         const { repositories } = this.state;
-        if (!_.isEqual(repositories, newRepositoryResult)) {
+        if (!isEqual(repositories, newRepositoryResult)) {
           this.setState({ repositories: newRepositoryResult });
         }
       });
