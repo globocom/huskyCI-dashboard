@@ -31,18 +31,18 @@ const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 const boxSizeWidth = 400;
 const boxSizeHeight = 300;
 
-const colorPurple = '#ab92ea';
-const colorPurpleHover = '#967bdc';
-const colorBlue = '#4fc0e8';
-const colorBlueHover = '#3baeda';
-const colorRed = '#ed5564';
-const colorRedHover = '#db4453';
-const colorGreen = '#a0d468';
-const colorGreenHover = '#8cc051';
-const colorYellow = '#ffce55';
-const colorYellowHover = '#f4bb43';
-const colorGray = '#ccd0d9';
-const colorGrayHover = '#aab2bd';
+const colorPurple = "#ab92ea";
+const colorPurpleHover = "#967bdc";
+const colorBlue = "#4fc0e8";
+const colorBlueHover = "#3baeda";
+const colorRed = "#ed5564";
+const colorRedHover = "#db4453";
+const colorGreen = "#a0d468";
+const colorGreenHover = "#8cc051";
+const colorYellow = "#ffce55";
+const colorYellowHover = "#f4bb43";
+const colorGray = "#ccd0d9";
+const colorGrayHover = "#aab2bd";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -51,18 +51,29 @@ class Dashboard extends Component {
       numAuthors: 0,
       numAnalysis: 0,
       resultsAnalysis: {
-        failed: 0, warning: 0, passed: 0, error: 0,
+        failed: 0,
+        warning: 0,
+        passed: 0,
+        error: 0,
       },
       languages: {
-        go: 0, python: 0, ruby: 0, javascript: 0,
+        go: 0,
+        python: 0,
+        ruby: 0,
+        javascript: 0,
       },
       containers: {
-        gosec: 0, npmAudit: 0, yarnAudit: 0, brakeman: 0, safety: 0, bandit: 0,
+        gosec: 0,
+        npmAudit: 0,
+        yarnAudit: 0,
+        brakeman: 0,
+        safety: 0,
+        bandit: 0,
       },
       repositories: 0,
       snackOpen: false,
-      variantValue: '',
-      snackMessage: '',
+      variantValue: "",
+      snackMessage: "",
     };
     this.timeoutID = 0;
     this.refreshCharts();
@@ -76,137 +87,159 @@ class Dashboard extends Component {
     clearInterval(this.timeoutID);
   }
 
-  callHuskyAPI = (huskyRoute) => fetch(huskyRoute).then((response) => {
-    if (!response.ok) {
-      this.openSnack('error', 'Service is unavailable');
-      return response.status;
-    }
-    if (huskyRoute === huskyCIAuthorRoute) {
-      response.json().then((authorResultJSON) => {
-        if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
-          const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
-          const { numAuthors } = this.state;
-          if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
-            this.setState({ numAuthors: newNumAuthorsResult });
-          }
+  callHuskyAPI = huskyRoute =>
+    fetch(huskyRoute)
+      .then(response => {
+        if (!response.ok) {
+          this.openSnack("error", "Service is unavailable");
+          return response.status;
         }
-      });
-    }
-    if (huskyRoute === huskyCIAnalysisRoute) {
-      response.json().then((analysisResultJSON) => {
-        let [numFailedResult, numWarningResult, numPassedResult, numErrorResult] = [0, 0, 0, 0];
-        Object.keys(analysisResultJSON).forEach((key) => {
-          if (_.isEqual(analysisResultJSON[key].result, 'failed')) {
-            numFailedResult = analysisResultJSON[key].count;
-          }
-          if (_.isEqual(analysisResultJSON[key].result, 'warning')) {
-            numWarningResult = analysisResultJSON[key].count;
-          }
-          if (_.isEqual(analysisResultJSON[key].result, 'passed')) {
-            numPassedResult = analysisResultJSON[key].count;
-          }
-          if (_.isEqual(analysisResultJSON[key].result, 'error')) {
-            numErrorResult = analysisResultJSON[key].count;
-          }
-        });
-        const totalAnalyses = numFailedResult
-            + numWarningResult + numPassedResult + numErrorResult;
-        const { numAnalysis } = this.state;
-        if (!_.isEqual(numAnalysis, totalAnalyses)) {
-          this.setState({
-            numAnalysis: totalAnalyses,
-            resultsAnalysis: {
-              failed: numFailedResult,
-              warning: numWarningResult,
-              passed: numPassedResult,
-              error: numErrorResult,
-            },
+        if (huskyRoute === huskyCIAuthorRoute) {
+          response.json().then(authorResultJSON => {
+            if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
+              const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
+              const { numAuthors } = this.state;
+              if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
+                this.setState({ numAuthors: newNumAuthorsResult });
+              }
+            }
           });
         }
-      });
-    }
-    if (huskyRoute === huskyCILanguageRoute) {
-      let [numGolangResult, numPythonResult, numRubyResult, numJavaScriptResult] = [0, 0, 0, 0];
-      response.json().then((languageResultJSON) => {
-        Object.keys(languageResultJSON).forEach((key) => {
-          if (_.isEqual(languageResultJSON[key].language, 'Go')) {
-            numGolangResult = languageResultJSON[key].count;
-          }
-          if (_.isEqual(languageResultJSON[key].language, 'Python')) {
-            numPythonResult = languageResultJSON[key].count;
-          }
-          if (_.isEqual(languageResultJSON[key].language, 'Ruby')) {
-            numRubyResult = languageResultJSON[key].count;
-          }
-          if (_.isEqual(languageResultJSON[key].language, 'JavaScript')) {
-            numJavaScriptResult = languageResultJSON[key].count;
-          }
-        });
-        const totalLanguages = {
-          go: numGolangResult,
-          python: numPythonResult,
-          ruby: numRubyResult,
-          javascript: numJavaScriptResult,
-        };
-        const { languages } = this.state;
-        if (!_.isEqual(languages, totalLanguages)) {
-          this.setState({ languages: totalLanguages });
+        if (huskyRoute === huskyCIAnalysisRoute) {
+          response.json().then(analysisResultJSON => {
+            let [
+              numFailedResult,
+              numWarningResult,
+              numPassedResult,
+              numErrorResult,
+            ] = [0, 0, 0, 0];
+            Object.keys(analysisResultJSON).forEach(key => {
+              if (_.isEqual(analysisResultJSON[key].result, "failed")) {
+                numFailedResult = analysisResultJSON[key].count;
+              }
+              if (_.isEqual(analysisResultJSON[key].result, "warning")) {
+                numWarningResult = analysisResultJSON[key].count;
+              }
+              if (_.isEqual(analysisResultJSON[key].result, "passed")) {
+                numPassedResult = analysisResultJSON[key].count;
+              }
+              if (_.isEqual(analysisResultJSON[key].result, "error")) {
+                numErrorResult = analysisResultJSON[key].count;
+              }
+            });
+            const totalAnalyses =
+              numFailedResult +
+              numWarningResult +
+              numPassedResult +
+              numErrorResult;
+            const { numAnalysis } = this.state;
+            if (!_.isEqual(numAnalysis, totalAnalyses)) {
+              this.setState({
+                numAnalysis: totalAnalyses,
+                resultsAnalysis: {
+                  failed: numFailedResult,
+                  warning: numWarningResult,
+                  passed: numPassedResult,
+                  error: numErrorResult,
+                },
+              });
+            }
+          });
         }
-      });
-    }
-    if (huskyRoute === huskyCIContainerRoute) {
-      let [numGosecResult, numNpmauditResult, numYarnauditResult, numBrakemanResult,
-        numSafetyResult, numBanditResult] = [0, 0, 0, 0, 0, 0];
-      response.json().then((containerResultJSON) => {
-        Object.keys(containerResultJSON).forEach((key) => {
-          if (_.isEqual(containerResultJSON[key].container, 'gosec')) {
-            numGosecResult = containerResultJSON[key].count;
-          }
-          if (_.isEqual(containerResultJSON[key].container, 'npmaudit')) {
-            numNpmauditResult = containerResultJSON[key].count;
-          }
-          if (_.isEqual(containerResultJSON[key].container, 'yarnaudit')) {
-            numYarnauditResult = containerResultJSON[key].count;
-          }
-          if (_.isEqual(containerResultJSON[key].container, 'brakeman')) {
-            numBrakemanResult = containerResultJSON[key].count;
-          }
-          if (_.isEqual(containerResultJSON[key].container, 'safety')) {
-            numSafetyResult = containerResultJSON[key].count;
-          }
-          if (_.isEqual(containerResultJSON[key].container, 'bandit')) {
-            numBanditResult = containerResultJSON[key].count;
-          }
-        });
-        const totalContainers = {
-          gosec: numGosecResult,
-          npmAudit: numNpmauditResult,
-          yarnAudit: numYarnauditResult,
-          brakeman: numBrakemanResult,
-          safety: numSafetyResult,
-          bandit: numBanditResult,
-        };
-        const { containers } = this.state;
-        if (!_.isEqual(containers, totalContainers)) {
-          this.setState({ containers: totalContainers });
+        if (huskyRoute === huskyCILanguageRoute) {
+          let [
+            numGolangResult,
+            numPythonResult,
+            numRubyResult,
+            numJavaScriptResult,
+          ] = [0, 0, 0, 0];
+          response.json().then(languageResultJSON => {
+            Object.keys(languageResultJSON).forEach(key => {
+              if (_.isEqual(languageResultJSON[key].language, "Go")) {
+                numGolangResult = languageResultJSON[key].count;
+              }
+              if (_.isEqual(languageResultJSON[key].language, "Python")) {
+                numPythonResult = languageResultJSON[key].count;
+              }
+              if (_.isEqual(languageResultJSON[key].language, "Ruby")) {
+                numRubyResult = languageResultJSON[key].count;
+              }
+              if (_.isEqual(languageResultJSON[key].language, "JavaScript")) {
+                numJavaScriptResult = languageResultJSON[key].count;
+              }
+            });
+            const totalLanguages = {
+              go: numGolangResult,
+              python: numPythonResult,
+              ruby: numRubyResult,
+              javascript: numJavaScriptResult,
+            };
+            const { languages } = this.state;
+            if (!_.isEqual(languages, totalLanguages)) {
+              this.setState({ languages: totalLanguages });
+            }
+          });
         }
-      });
-    }
-    if (huskyRoute === huskyCIRepositoryRoute) {
-      let newRepositoryResult = 0;
-      response.json().then((repositoryResultJSON) => {
-        newRepositoryResult = repositoryResultJSON[0].totalRepositories;
-        const { repositories } = this.state;
-        if (!_.isEqual(repositories, newRepositoryResult)) {
-          this.setState({ repositories: newRepositoryResult });
+        if (huskyRoute === huskyCIContainerRoute) {
+          let [
+            numGosecResult,
+            numNpmauditResult,
+            numYarnauditResult,
+            numBrakemanResult,
+            numSafetyResult,
+            numBanditResult,
+          ] = [0, 0, 0, 0, 0, 0];
+          response.json().then(containerResultJSON => {
+            Object.keys(containerResultJSON).forEach(key => {
+              if (_.isEqual(containerResultJSON[key].container, "gosec")) {
+                numGosecResult = containerResultJSON[key].count;
+              }
+              if (_.isEqual(containerResultJSON[key].container, "npmaudit")) {
+                numNpmauditResult = containerResultJSON[key].count;
+              }
+              if (_.isEqual(containerResultJSON[key].container, "yarnaudit")) {
+                numYarnauditResult = containerResultJSON[key].count;
+              }
+              if (_.isEqual(containerResultJSON[key].container, "brakeman")) {
+                numBrakemanResult = containerResultJSON[key].count;
+              }
+              if (_.isEqual(containerResultJSON[key].container, "safety")) {
+                numSafetyResult = containerResultJSON[key].count;
+              }
+              if (_.isEqual(containerResultJSON[key].container, "bandit")) {
+                numBanditResult = containerResultJSON[key].count;
+              }
+            });
+            const totalContainers = {
+              gosec: numGosecResult,
+              npmAudit: numNpmauditResult,
+              yarnAudit: numYarnauditResult,
+              brakeman: numBrakemanResult,
+              safety: numSafetyResult,
+              bandit: numBanditResult,
+            };
+            const { containers } = this.state;
+            if (!_.isEqual(containers, totalContainers)) {
+              this.setState({ containers: totalContainers });
+            }
+          });
         }
+        if (huskyRoute === huskyCIRepositoryRoute) {
+          let newRepositoryResult = 0;
+          response.json().then(repositoryResultJSON => {
+            newRepositoryResult = repositoryResultJSON[0].totalRepositories;
+            const { repositories } = this.state;
+            if (!_.isEqual(repositories, newRepositoryResult)) {
+              this.setState({ repositories: newRepositoryResult });
+            }
+          });
+        }
+        return response.status;
+      })
+      .catch(() => {
+        this.openSnack("error", "Service is unavailable");
+        return 500;
       });
-    }
-    return response.status;
-  }).catch(() => {
-    this.openSnack('error', 'Service is unavailable');
-    return 500;
-  })
 
   openSnack = (variant, message) => {
     this.setState({
@@ -214,16 +247,16 @@ class Dashboard extends Component {
       variantValue: variant,
       snackMessage: message,
     });
-  }
+  };
 
   closeSnack = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     this.setState({
       snackOpen: false,
     });
-  }
+  };
 
   refreshCharts = () => {
     const huskyCIRoutes = [
@@ -233,13 +266,13 @@ class Dashboard extends Component {
       huskyCIContainerRoute,
       huskyCIRepositoryRoute,
     ];
-    huskyCIRoutes.map(async (huskyRoute) => {
+    huskyCIRoutes.map(async huskyRoute => {
       const status = await this.callHuskyAPI(huskyRoute);
       if (status !== 200) {
         clearInterval(this.timeoutID);
       }
     });
-  }
+  };
 
   render() {
     const { languages } = this.state;
@@ -248,12 +281,17 @@ class Dashboard extends Component {
     const numRubyFound = languages.ruby;
     const numJavaScriptFound = languages.javascript;
     const infoLanguages = {
-      labels: ['Golang', 'Python', 'Ruby', 'JavaScript'],
+      labels: ["Golang", "Python", "Ruby", "JavaScript"],
       datasets: [
         {
           data: [numGoFound, numPythonFound, numRubyFound, numJavaScriptFound],
           backgroundColor: [colorBlue, colorGreen, colorRed, colorYellow],
-          hoverBackgroundColor: [colorBlueHover, colorGreenHover, colorRedHover, colorYellowHover],
+          hoverBackgroundColor: [
+            colorBlueHover,
+            colorGreenHover,
+            colorRedHover,
+            colorYellowHover,
+          ],
         },
       ],
     };
@@ -263,12 +301,22 @@ class Dashboard extends Component {
     const numPassedFound = [resultsAnalysis.passed];
     const numErrorFound = [resultsAnalysis.error];
     const infoAnalysis = {
-      labels: ['Failed', 'Warning', 'Passed', 'Error'],
+      labels: ["Failed", "Warning", "Passed", "Error"],
       datasets: [
         {
-          data: [numFailedFound, numWarningFound, numPassedFound, numErrorFound],
+          data: [
+            numFailedFound,
+            numWarningFound,
+            numPassedFound,
+            numErrorFound,
+          ],
           backgroundColor: [colorRed, colorYellow, colorGreen, colorGray],
-          hoverBackgroundColor: [colorRedHover, colorYellowHover, colorGreenHover, colorGrayHover],
+          hoverBackgroundColor: [
+            colorRedHover,
+            colorYellowHover,
+            colorGreenHover,
+            colorGrayHover,
+          ],
         },
       ],
     };
@@ -280,7 +328,14 @@ class Dashboard extends Component {
     const numSafetyFound = containers.safety;
     const numBanditFound = containers.bandit;
     const infoContainers = {
-      labels: ['Gosec', 'Npm Audit', 'Yarn Audit', 'Brakeman', 'Safety', 'Bandit'],
+      labels: [
+        "Gosec",
+        "Npm Audit",
+        "Yarn Audit",
+        "Brakeman",
+        "Safety",
+        "Bandit",
+      ],
       datasets: [
         {
           data: [
@@ -323,7 +378,7 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <Grid container spacing={3} style={{padding: '1rem'}}>
+        <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} sm={4}>
             <Metric title="Developers" value={numAuthors} />
           </Grid>
@@ -335,7 +390,7 @@ class Dashboard extends Component {
           </Grid>
         </Grid>
 
-        <Grid container spacing={3} style={{padding: '1rem'}}>
+        <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} md={4}>
             <Graph data={infoAnalysis} />
           </Grid>
