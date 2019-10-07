@@ -39,7 +39,7 @@ class TopBar extends Component {
             </div>
           </div>
           <div className="user-picture-container">
-            <img className="user-picture" src={picture} alt="user" />
+            <img className="user-picture" src={picture} alt={`Profile of ${name}`} />
           </div>
         </div>
       </div>
