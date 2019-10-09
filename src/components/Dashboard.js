@@ -8,7 +8,13 @@ import React, { Component } from "react";
 import { Bar } from "react-chartjs-2";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { Paper } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+} from "@material-ui/core";
 import _ from "lodash";
 import SnackComponent from "./SnackComponent";
 
@@ -87,13 +93,23 @@ class Dashboard extends Component {
       snackOpen: false,
       variantValue: "",
       snackMessage: "",
+      chartsIntervalRefresh: 10000,
     };
     this.timeoutID = 0;
     this.refreshCharts();
   }
 
   componentDidMount() {
-    this.timeoutID = setInterval(this.refreshCharts.bind(this), 10000);
+    const { chartsIntervalRefresh } = this.state;
+    this.setRefreshChartsInterval(chartsIntervalRefresh);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { chartsIntervalRefresh: currentChartsInterval } = prevState;
+    const { chartsIntervalRefresh: newChartsInterval } = this.state;
+    if (currentChartsInterval !== newChartsInterval) {
+      this.setRefreshChartsInterval(newChartsInterval);
+    }
   }
 
   componentWillUnmount() {
@@ -271,6 +287,16 @@ class Dashboard extends Component {
     });
   };
 
+  changeRefreshChartsInterval = event => {
+    const { value: chartsIntervalRefresh } = event.target;
+    this.setState({ chartsIntervalRefresh });
+  };
+
+  setRefreshChartsInterval = (interval = 10000) => {
+    clearInterval(this.timeoutID);
+    this.timeoutID = setInterval(this.refreshCharts.bind(this), interval);
+  };
+
   refreshCharts = () => {
     const huskyCIRoutes = [
       huskyCIAuthorRoute,
@@ -388,9 +414,31 @@ class Dashboard extends Component {
     const { snackOpen } = this.state;
     const { variantValue } = this.state;
     const { snackMessage } = this.state;
+    const { chartsIntervalRefresh } = this.state;
 
     return (
       <div>
+        <Grid container spacing={3} style={{ padding: "1rem" }}>
+          <Grid item xs={12} md={4}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="refresh-delay">Refresh delay:</InputLabel>
+              <Select
+                onChange={this.changeRefreshChartsInterval}
+                value={chartsIntervalRefresh}
+                inputProps={{
+                  name: "chart-refresh-interval",
+                  id: "chart-refresh-interval",
+                }}
+              >
+                <MenuItem value={1000}>1 second</MenuItem>
+                <MenuItem value={5000}>5 seconds</MenuItem>
+                <MenuItem value={10000}>10 seconds</MenuItem>
+                <MenuItem value={60000}>1 minute</MenuItem>
+                <MenuItem value={300000}>5 minutes</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
         <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} sm={4}>
             <Paper>
