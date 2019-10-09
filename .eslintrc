@@ -4,7 +4,8 @@
     "airbnb",
     "plugin:jest/recommended",
     "eslint:recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
   ],
   "env": {
     "browser": true,
@@ -28,6 +29,10 @@
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
     "react/react-in-jsx-scope": 2,
+    "react/prop-types": 0,
+    "react/no-unused-prop-types": 0,
+    "react/require-default-props": 0,
+    "react/default-props-match-prop-types": 0,
     "prettier/prettier": "error"
   },
   "plugins": ["react", "prettier", "jest"]
