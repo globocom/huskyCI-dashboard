@@ -1,43 +1,67 @@
-import { Paper } from '@material-ui/core';
-import { Bar } from 'react-chartjs-2';
-import PropTypes from 'prop-types';
-import React from 'react';
+import { Paper } from '@material-ui/core'
+import { Bar, Doughnut, Pie } from 'react-chartjs-2'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 const chartOptions = {
   legend: {
-    display: false,
+    display: false
   },
   scales: {
-    yAxes: [{
-      ticks: {
-        min: 0,
-      },
-    }],
-  },
-};
+    yAxes: [
+      {
+        ticks: {
+          min: 0
+        }
+      }
+    ]
+  }
+}
 
-const Graph = ({ boxMargin, boxSizeWidth, boxSizeHeight, data }) => (
-  <Paper>
-    <Bar
-      width={boxSizeWidth}
-      height={boxSizeHeight}
-      data={data}
-      options={chartOptions}
-    />
-  </Paper>
-);
+const GraphType = {
+  Pie: 'Pie',
+  Doughnut: 'Doughnut',
+  Bar: 'Bar'
+}
+
+const Graph = props => <Paper>{renderGraph(props)}</Paper>
+
+const renderGraph = props => {
+  switch (props.type) {
+    case GraphType.Bar:
+      return asBar({ ...props })
+    case GraphType.Doughnut:
+      return asDoughnut({ ...props })
+    case GraphType.Pie:
+      return asPie({ ...props })
+    default:
+      return asBar({ ...props })
+  }
+}
+
+const asDoughnut = ({ data, width, height, options }) => (
+  <Doughnut data={data} width={width} height={height} options={options} />
+)
+const asPie = ({ data, width, height, options }) => (
+  <Pie data={data} width={width} height={height} options={options} />
+)
+const asBar = ({ data, width, height, options }) => (
+  <Bar data={data} width={width} height={height} options={options} />
+)
 
 Graph.defaultProps = {
+  type: GraphType.Bar,
   boxMargin: 8,
-  boxSizeWidth: 400,
-  boxSizeHeight: 300,
-};
+  width: 400,
+  height: 300,
+  options: chartOptions
+}
 
 Graph.propTypes = {
+  type: PropTypes.string,
   data: PropTypes.node.isRequired,
-  boxMargin: PropTypes.number,
-  boxSizeWidth: PropTypes.number,
-  boxSizeHeight: PropTypes.number,
-};
+  width: PropTypes.number,
+  height: PropTypes.number
+}
 
-export default Graph;
+export { Graph, GraphType }
