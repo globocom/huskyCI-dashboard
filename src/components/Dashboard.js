@@ -4,45 +4,45 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 */
 
-import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import _ from 'lodash'
-import SnackComponent from './SnackComponent'
-import Metric from './Metric'
-import { Graph, GraphType } from './Graph'
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import _ from "lodash";
+import SnackComponent from "./SnackComponent";
+import Metric from "./Metric";
+import { Graph, GraphType } from "./Graph";
 
 const styles = {
   root: {
     width: 100,
-    height: 100
-  }
-}
-const snackDurationInMS = 5000
+    height: 100,
+  },
+};
+const snackDurationInMS = 5000;
 
-const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS
-const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`
-const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis`
-const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`
-const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`
-const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`
+const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
+const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`;
+const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis`;
+const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
+const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
+const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
 
-const colorPurple = '#ab92ea'
-const colorPurpleHover = '#967bdc'
-const colorBlue = '#4fc0e8'
-const colorBlueHover = '#3baeda'
-const colorRed = '#ed5564'
-const colorRedHover = '#db4453'
-const colorGreen = '#a0d468'
-const colorGreenHover = '#8cc051'
-const colorYellow = '#ffce55'
-const colorYellowHover = '#f4bb43'
-const colorGray = '#ccd0d9'
-const colorGrayHover = '#aab2bd'
+const colorPurple = "#ab92ea";
+const colorPurpleHover = "#967bdc";
+const colorBlue = "#4fc0e8";
+const colorBlueHover = "#3baeda";
+const colorRed = "#ed5564";
+const colorRedHover = "#db4453";
+const colorGreen = "#a0d468";
+const colorGreenHover = "#8cc051";
+const colorYellow = "#ffce55";
+const colorYellowHover = "#f4bb43";
+const colorGray = "#ccd0d9";
+const colorGrayHover = "#aab2bd";
 
 class Dashboard extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       numAuthors: 0,
       numAnalysis: 0,
@@ -50,13 +50,13 @@ class Dashboard extends Component {
         failed: 0,
         warning: 0,
         passed: 0,
-        error: 0
+        error: 0,
       },
       languages: {
         go: 0,
         python: 0,
         ruby: 0,
-        javascript: 0
+        javascript: 0,
       },
       containers: {
         gosec: 0,
@@ -64,42 +64,42 @@ class Dashboard extends Component {
         yarnAudit: 0,
         brakeman: 0,
         safety: 0,
-        bandit: 0
+        bandit: 0,
       },
       repositories: 0,
       snackOpen: false,
-      variantValue: '',
-      snackMessage: ''
-    }
-    this.timeoutID = 0
-    this.refreshCharts()
+      variantValue: "",
+      snackMessage: "",
+    };
+    this.timeoutID = 0;
+    this.refreshCharts();
   }
 
-  componentDidMount () {
-    this.timeoutID = setInterval(this.refreshCharts.bind(this), 10000)
+  componentDidMount() {
+    this.timeoutID = setInterval(this.refreshCharts.bind(this), 10000);
   }
 
-  componentWillUnmount () {
-    clearInterval(this.timeoutID)
+  componentWillUnmount() {
+    clearInterval(this.timeoutID);
   }
 
   callHuskyAPI = huskyRoute =>
     fetch(huskyRoute)
       .then(response => {
         if (!response.ok) {
-          this.openSnack('error', 'Service is unavailable')
-          return response.status
+          this.openSnack("error", "Service is unavailable");
+          return response.status;
         }
         if (huskyRoute === huskyCIAuthorRoute) {
           response.json().then(authorResultJSON => {
             if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
-              const newNumAuthorsResult = authorResultJSON[0].totalAuthors
-              const { numAuthors } = this.state
+              const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
+              const { numAuthors } = this.state;
               if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
-                this.setState({ numAuthors: newNumAuthorsResult })
+                this.setState({ numAuthors: newNumAuthorsResult });
               }
             }
-          })
+          });
         }
         if (huskyRoute === huskyCIAnalysisRoute) {
           response.json().then(analysisResultJSON => {
@@ -107,28 +107,28 @@ class Dashboard extends Component {
               numFailedResult,
               numWarningResult,
               numPassedResult,
-              numErrorResult
-            ] = [0, 0, 0, 0]
+              numErrorResult,
+            ] = [0, 0, 0, 0];
             Object.keys(analysisResultJSON).forEach(key => {
-              if (_.isEqual(analysisResultJSON[key].result, 'failed')) {
-                numFailedResult = analysisResultJSON[key].count
+              if (_.isEqual(analysisResultJSON[key].result, "failed")) {
+                numFailedResult = analysisResultJSON[key].count;
               }
-              if (_.isEqual(analysisResultJSON[key].result, 'warning')) {
-                numWarningResult = analysisResultJSON[key].count
+              if (_.isEqual(analysisResultJSON[key].result, "warning")) {
+                numWarningResult = analysisResultJSON[key].count;
               }
-              if (_.isEqual(analysisResultJSON[key].result, 'passed')) {
-                numPassedResult = analysisResultJSON[key].count
+              if (_.isEqual(analysisResultJSON[key].result, "passed")) {
+                numPassedResult = analysisResultJSON[key].count;
               }
-              if (_.isEqual(analysisResultJSON[key].result, 'error')) {
-                numErrorResult = analysisResultJSON[key].count
+              if (_.isEqual(analysisResultJSON[key].result, "error")) {
+                numErrorResult = analysisResultJSON[key].count;
               }
-            })
+            });
             const totalAnalyses =
               numFailedResult +
               numWarningResult +
               numPassedResult +
-              numErrorResult
-            const { numAnalysis } = this.state
+              numErrorResult;
+            const { numAnalysis } = this.state;
             if (!_.isEqual(numAnalysis, totalAnalyses)) {
               this.setState({
                 numAnalysis: totalAnalyses,
@@ -136,45 +136,45 @@ class Dashboard extends Component {
                   failed: numFailedResult,
                   warning: numWarningResult,
                   passed: numPassedResult,
-                  error: numErrorResult
-                }
-              })
+                  error: numErrorResult,
+                },
+              });
             }
-          })
+          });
         }
         if (huskyRoute === huskyCILanguageRoute) {
           let [
             numGolangResult,
             numPythonResult,
             numRubyResult,
-            numJavaScriptResult
-          ] = [0, 0, 0, 0]
+            numJavaScriptResult,
+          ] = [0, 0, 0, 0];
           response.json().then(languageResultJSON => {
             Object.keys(languageResultJSON).forEach(key => {
-              if (_.isEqual(languageResultJSON[key].language, 'Go')) {
-                numGolangResult = languageResultJSON[key].count
+              if (_.isEqual(languageResultJSON[key].language, "Go")) {
+                numGolangResult = languageResultJSON[key].count;
               }
-              if (_.isEqual(languageResultJSON[key].language, 'Python')) {
-                numPythonResult = languageResultJSON[key].count
+              if (_.isEqual(languageResultJSON[key].language, "Python")) {
+                numPythonResult = languageResultJSON[key].count;
               }
-              if (_.isEqual(languageResultJSON[key].language, 'Ruby')) {
-                numRubyResult = languageResultJSON[key].count
+              if (_.isEqual(languageResultJSON[key].language, "Ruby")) {
+                numRubyResult = languageResultJSON[key].count;
               }
-              if (_.isEqual(languageResultJSON[key].language, 'JavaScript')) {
-                numJavaScriptResult = languageResultJSON[key].count
+              if (_.isEqual(languageResultJSON[key].language, "JavaScript")) {
+                numJavaScriptResult = languageResultJSON[key].count;
               }
-            })
+            });
             const totalLanguages = {
               go: numGolangResult,
               python: numPythonResult,
               ruby: numRubyResult,
-              javascript: numJavaScriptResult
-            }
-            const { languages } = this.state
+              javascript: numJavaScriptResult,
+            };
+            const { languages } = this.state;
             if (!_.isEqual(languages, totalLanguages)) {
-              this.setState({ languages: totalLanguages })
+              this.setState({ languages: totalLanguages });
             }
-          })
+          });
         }
         if (huskyRoute === huskyCIContainerRoute) {
           let [
@@ -183,76 +183,76 @@ class Dashboard extends Component {
             numYarnauditResult,
             numBrakemanResult,
             numSafetyResult,
-            numBanditResult
-          ] = [0, 0, 0, 0, 0, 0]
+            numBanditResult,
+          ] = [0, 0, 0, 0, 0, 0];
           response.json().then(containerResultJSON => {
             Object.keys(containerResultJSON).forEach(key => {
-              if (_.isEqual(containerResultJSON[key].container, 'gosec')) {
-                numGosecResult = containerResultJSON[key].count
+              if (_.isEqual(containerResultJSON[key].container, "gosec")) {
+                numGosecResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, 'npmaudit')) {
-                numNpmauditResult = containerResultJSON[key].count
+              if (_.isEqual(containerResultJSON[key].container, "npmaudit")) {
+                numNpmauditResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, 'yarnaudit')) {
-                numYarnauditResult = containerResultJSON[key].count
+              if (_.isEqual(containerResultJSON[key].container, "yarnaudit")) {
+                numYarnauditResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, 'brakeman')) {
-                numBrakemanResult = containerResultJSON[key].count
+              if (_.isEqual(containerResultJSON[key].container, "brakeman")) {
+                numBrakemanResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, 'safety')) {
-                numSafetyResult = containerResultJSON[key].count
+              if (_.isEqual(containerResultJSON[key].container, "safety")) {
+                numSafetyResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, 'bandit')) {
-                numBanditResult = containerResultJSON[key].count
+              if (_.isEqual(containerResultJSON[key].container, "bandit")) {
+                numBanditResult = containerResultJSON[key].count;
               }
-            })
+            });
             const totalContainers = {
               gosec: numGosecResult,
               npmAudit: numNpmauditResult,
               yarnAudit: numYarnauditResult,
               brakeman: numBrakemanResult,
               safety: numSafetyResult,
-              bandit: numBanditResult
-            }
-            const { containers } = this.state
+              bandit: numBanditResult,
+            };
+            const { containers } = this.state;
             if (!_.isEqual(containers, totalContainers)) {
-              this.setState({ containers: totalContainers })
+              this.setState({ containers: totalContainers });
             }
-          })
+          });
         }
         if (huskyRoute === huskyCIRepositoryRoute) {
-          let newRepositoryResult = 0
+          let newRepositoryResult = 0;
           response.json().then(repositoryResultJSON => {
-            newRepositoryResult = repositoryResultJSON[0].totalRepositories
-            const { repositories } = this.state
+            newRepositoryResult = repositoryResultJSON[0].totalRepositories;
+            const { repositories } = this.state;
             if (!_.isEqual(repositories, newRepositoryResult)) {
-              this.setState({ repositories: newRepositoryResult })
+              this.setState({ repositories: newRepositoryResult });
             }
-          })
+          });
         }
-        return response.status
+        return response.status;
       })
       .catch(() => {
-        this.openSnack('error', 'Service is unavailable')
-        return 500
-      })
+        this.openSnack("error", "Service is unavailable");
+        return 500;
+      });
 
   openSnack = (variant, message) => {
     this.setState({
       snackOpen: true,
       variantValue: variant,
-      snackMessage: message
-    })
-  }
+      snackMessage: message,
+    });
+  };
 
   closeSnack = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
+    if (reason === "clickaway") {
+      return;
     }
     this.setState({
-      snackOpen: false
-    })
-  }
+      snackOpen: false,
+    });
+  };
 
   refreshCharts = () => {
     const huskyCIRoutes = [
@@ -260,24 +260,24 @@ class Dashboard extends Component {
       huskyCIAnalysisRoute,
       huskyCILanguageRoute,
       huskyCIContainerRoute,
-      huskyCIRepositoryRoute
-    ]
+      huskyCIRepositoryRoute,
+    ];
     huskyCIRoutes.map(async huskyRoute => {
-      const status = await this.callHuskyAPI(huskyRoute)
+      const status = await this.callHuskyAPI(huskyRoute);
       if (status !== 200) {
-        clearInterval(this.timeoutID)
+        clearInterval(this.timeoutID);
       }
-    })
-  }
+    });
+  };
 
-  render () {
-    const { languages } = this.state
-    const numGoFound = languages.go
-    const numPythonFound = languages.python
-    const numRubyFound = languages.ruby
-    const numJavaScriptFound = languages.javascript
+  render() {
+    const { languages } = this.state;
+    const numGoFound = languages.go;
+    const numPythonFound = languages.python;
+    const numRubyFound = languages.ruby;
+    const numJavaScriptFound = languages.javascript;
     const infoLanguages = {
-      labels: ['Golang', 'Python', 'Ruby', 'JavaScript'],
+      labels: ["Golang", "Python", "Ruby", "JavaScript"],
       datasets: [
         {
           data: [numGoFound, numPythonFound, numRubyFound, numJavaScriptFound],
@@ -286,51 +286,51 @@ class Dashboard extends Component {
             colorBlueHover,
             colorGreenHover,
             colorRedHover,
-            colorYellowHover
-          ]
-        }
-      ]
-    }
-    const { resultsAnalysis } = this.state
-    const numFailedFound = [resultsAnalysis.failed]
-    const numWarningFound = [resultsAnalysis.warning]
-    const numPassedFound = [resultsAnalysis.passed]
-    const numErrorFound = [resultsAnalysis.error]
+            colorYellowHover,
+          ],
+        },
+      ],
+    };
+    const { resultsAnalysis } = this.state;
+    const numFailedFound = [resultsAnalysis.failed];
+    const numWarningFound = [resultsAnalysis.warning];
+    const numPassedFound = [resultsAnalysis.passed];
+    const numErrorFound = [resultsAnalysis.error];
     const infoAnalysis = {
-      labels: ['Failed', 'Warning', 'Passed', 'Error'],
+      labels: ["Failed", "Warning", "Passed", "Error"],
       datasets: [
         {
           data: [
             numFailedFound,
             numWarningFound,
             numPassedFound,
-            numErrorFound
+            numErrorFound,
           ],
           backgroundColor: [colorRed, colorYellow, colorGreen, colorGray],
           hoverBackgroundColor: [
             colorRedHover,
             colorYellowHover,
             colorGreenHover,
-            colorGrayHover
-          ]
-        }
-      ]
-    }
-    const { containers } = this.state
-    const numGosecFound = containers.gosec
-    const numNpmauditFound = containers.npmAudit
-    const numYarnauditFound = containers.yarnAudit
-    const numBrakemanFound = containers.brakeman
-    const numSafetyFound = containers.safety
-    const numBanditFound = containers.bandit
+            colorGrayHover,
+          ],
+        },
+      ],
+    };
+    const { containers } = this.state;
+    const numGosecFound = containers.gosec;
+    const numNpmauditFound = containers.npmAudit;
+    const numYarnauditFound = containers.yarnAudit;
+    const numBrakemanFound = containers.brakeman;
+    const numSafetyFound = containers.safety;
+    const numBanditFound = containers.bandit;
     const infoContainers = {
       labels: [
-        'Gosec',
-        'Npm Audit',
-        'Yarn Audit',
-        'Brakeman',
-        'Safety',
-        'Bandit'
+        "Gosec",
+        "Npm Audit",
+        "Yarn Audit",
+        "Brakeman",
+        "Safety",
+        "Bandit",
       ],
       datasets: [
         {
@@ -340,7 +340,7 @@ class Dashboard extends Component {
             numYarnauditFound,
             numBrakemanFound,
             numSafetyFound,
-            numBanditFound
+            numBanditFound,
           ],
           backgroundColor: [
             colorBlue,
@@ -348,7 +348,7 @@ class Dashboard extends Component {
             colorGray,
             colorRed,
             colorGreen,
-            colorYellow
+            colorYellow,
           ],
           hoverBackgroundColor: [
             colorBlueHover,
@@ -356,45 +356,45 @@ class Dashboard extends Component {
             colorGrayHover,
             colorRedHover,
             colorGreenHover,
-            colorYellowHover
-          ]
-        }
-      ]
-    }
+            colorYellowHover,
+          ],
+        },
+      ],
+    };
 
-    const { numAuthors } = this.state
+    const { numAuthors } = this.state;
 
-    const { numAnalysis } = this.state
+    const { numAnalysis } = this.state;
 
-    const { repositories } = this.state
+    const { repositories } = this.state;
 
-    const { snackOpen } = this.state
-    const { variantValue } = this.state
-    const { snackMessage } = this.state
+    const { snackOpen } = this.state;
+    const { variantValue } = this.state;
+    const { snackMessage } = this.state;
 
     return (
       <div>
-        <Grid container spacing={3} style={{ padding: '1rem' }}>
+        <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} sm={4}>
-            <Metric title='Developers' value={numAuthors} />
+            <Metric title="Developers" value={numAuthors} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Metric title='Analyses' value={numAnalysis} />
+            <Metric title="Analyses" value={numAnalysis} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Metric title='Repositories' value={repositories} />
+            <Metric title="Repositories" value={repositories} />
           </Grid>
         </Grid>
 
-        <Grid container spacing={3} style={{ padding: '1rem' }}>
+        <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} md={4}>
-            <Graph data={infoAnalysis} type={GraphType.Bar} />
+            <Graph data={infoAnalysis} type={GraphType.Pie} />
           </Grid>
           <Grid item xs={12} md={4}>
             <Graph data={infoLanguages} type={GraphType.Bar} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <Graph data={infoContainers} type={GraphType.Bar} />
+            <Graph data={infoContainers} type={GraphType.Pie} />
           </Grid>
         </Grid>
 
@@ -406,8 +406,8 @@ class Dashboard extends Component {
           message={snackMessage}
         />
       </div>
-    )
+    );
   }
 }
 
-export default withStyles(styles)(Dashboard)
+export default withStyles(styles)(Dashboard);
