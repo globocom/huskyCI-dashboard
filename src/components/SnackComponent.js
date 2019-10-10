@@ -1,21 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import Snackbar from '@material-ui/core/Snackbar';
-import green from '@material-ui/core/colors/green';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import Snackbar from "@material-ui/core/Snackbar";
+import green from "@material-ui/core/colors/green";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ErrorIcon from "@material-ui/icons/Error";
+import { makeStyles } from "@material-ui/core/styles";
 
 const variantIcon = {
   success: CheckCircleIcon,
   error: ErrorIcon,
 };
 
-const snackstyles = makeStyles((theme) => ({
+const snackstyles = makeStyles(theme => ({
   success: {
     backgroundColor: green[600],
   },
@@ -31,27 +31,26 @@ const snackstyles = makeStyles((theme) => ({
   },
   message: {
     fontSize: 15,
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
 function MySnackbarContent(props) {
   const classes = snackstyles();
-  const {
-    className, message, onClose, variant,
-  } = props;
+  const { className, message, onClose, variant } = props;
   const Icon = variantIcon[variant];
+  const messageIcon = (
+    <span id="client-snackbar" className={classes.message}>
+      <Icon className={clsx(classes.icon, classes.iconVariant)} />
+      {message}
+    </span>
+  );
   return (
     <SnackbarContent
       className={clsx(classes[variant], className)}
       aria-describedby="client-snackbar"
-      message={(
-        <span id="client-snackbar" className={classes.message}>
-          <Icon className={clsx(classes.icon, classes.iconVariant)} />
-          {message}
-        </span>
-)}
+      message={messageIcon}
       action={[
         <IconButton
           key="close"
@@ -71,25 +70,23 @@ MySnackbarContent.propTypes = {
   className: PropTypes.string,
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
-  variant: PropTypes.oneOf(['success', 'error', '']).isRequired,
+  variant: PropTypes.oneOf(["success", "error", ""]).isRequired,
 };
 
 MySnackbarContent.defaultProps = {
-  className: '',
+  className: "",
 };
 
-const SnackComponent = (props) => {
-  const {
-    open, duration, onClose, variant, message,
-  } = props;
+const SnackComponent = props => {
+  const { open, duration, onClose, variant, message } = props;
   return (
     <Snackbar
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
       open={open}
       autoHideDuration={duration}
       onClose={onClose}
       ContentProps={{
-        'aria-describedby': 'message-id',
+        "aria-describedby": "message-id",
       }}
     >
       <MySnackbarContent
@@ -105,7 +102,7 @@ SnackComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   duration: PropTypes.number,
   onClose: PropTypes.func.isRequired,
-  variant: PropTypes.oneOf(['success', 'error', '']).isRequired,
+  variant: PropTypes.oneOf(["success", "error", ""]).isRequired,
   message: PropTypes.string.isRequired,
 };
 
