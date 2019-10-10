@@ -11,7 +11,7 @@ import { faGitlab, faGithub } from '@fortawesome/free-brands-svg-icons';
 import logo from './../logo.png';
 
 const colorBackground = '#171515';
-const colorBackgruondBox = '#3d4572';
+const colorBackgroundBox = '#3d4572';
 
 const boxSizeWidth = 400;
 const boxSizeHeight = 260;
@@ -29,7 +29,7 @@ export default class Login extends Component {
         <div style={{ 
           width: boxSizeWidth, 
           height: boxSizeHeight, 
-          background: colorBackgruondBox, 
+          background: colorBackgroundBox, 
           position: 'absolute',
           top: '50%',
           left: '50%',
