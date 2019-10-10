@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import './TopBar.css';
-import logo from '../logoTopBar.png';
+import logo from '../logo.png';
 
 class TopBar extends Component {
   constructor() {
     super();
-    // TODO: Replace these information by the one returned from the OpenID api
     this.state = {
-      picture: 'https://avatars2.githubusercontent.com/u/1298871?s=40&v=4',
-      name: 'Thiago Coimbra Lemos',
-      username: 'tclemos',
+      picture: 'https://avatars1.githubusercontent.com/u/83798?s=40&v=4',
+      name: 'huskyCI Dashboard',
+      username: 'huskyCI',
     };
   }
 
@@ -21,14 +20,7 @@ class TopBar extends Component {
         <div className="logo-container">
           <img className="logo" src={logo} alt="huskyCI" />
         </div>
-        <div className="menu-container">
-          <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
-            <li>Item 4</li>
-          </ul>
-        </div>
+        <div className="menu-container" />
         <div className="user-container">
           <div className="user-info">
             <div className="user-username">
@@ -40,6 +32,12 @@ class TopBar extends Component {
           </div>
           <div className="user-picture-container">
             <img className="user-picture" src={picture} alt={`Profile of ${name}`} />
+          </div>
+          <div class="user-menu">
+            <ul>
+              <li><a href="#sign-out">Sign Out</a></li>
+              <li><a href="#profile">Profile</a></li>
+            </ul>
           </div>
         </div>
       </div>
