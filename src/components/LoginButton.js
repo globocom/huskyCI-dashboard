@@ -1,4 +1,10 @@
-import React, { Component } from 'react';
+/*
+  Copyright 2019 Globo.com authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+*/
+
+import React from 'react';
 
 const LoginButton = ({ backgroundColorIcon, backgroundColorText, icon, text, link }) =>
   <div 
@@ -6,7 +12,6 @@ const LoginButton = ({ backgroundColorIcon, backgroundColorText, icon, text, lin
       width: '80%',
       height: '55px',
       padding: 0,
-      margin: 0,
       background: backgroundColorText,
       borderRadius: '3px',
       cursor: 'pointer',
@@ -21,7 +26,8 @@ const LoginButton = ({ backgroundColorIcon, backgroundColorText, icon, text, lin
         height: '100%',
         background: backgroundColorIcon,
         borderRadius: '3px',
-        position: 'absolute'
+        position: 'absolute',
+        fontSize: '30px'
       }}>
         <span style={{ 
           position: 'absolute', 
@@ -37,7 +43,7 @@ const LoginButton = ({ backgroundColorIcon, backgroundColorText, icon, text, lin
         height: '100%',
         position: 'absolute',
         top: '37%',
-        left: '45px',
+        left: '96px',
       }}>
         Log In with {text}
       </div>

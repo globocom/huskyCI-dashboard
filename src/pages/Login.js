@@ -1,5 +1,11 @@
+/*
+  Copyright 2019 Globo.com authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+*/
+
 import React, { Component } from 'react';
-import LoginButton from './LoginButton';
+import LoginButton from '../components/LoginButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBitbucket, faGithub } from '@fortawesome/free-brands-svg-icons';
 
@@ -33,7 +39,8 @@ export default class Login extends Component {
             <h2 style={{ 
               color: '#fff', 
               fontSize: '25px', 
-              padding: '8px 0 10px 0' 
+              padding: '8px 0 10px 0',
+              textAlign: 'center'
             }}>Start building!</h2>
           </div>
           <div style={{
