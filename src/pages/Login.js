@@ -7,9 +7,10 @@ license that can be found in the LICENSE file.
 import React, { Component } from 'react';
 import LoginButton from '../components/LoginButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBitbucket, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faGitlab, faGithub } from '@fortawesome/free-brands-svg-icons';
+import logo from './../logo.png';
 
-const colorBackground = '#e6dbdb';
+const colorBackground = '#171515';
 const colorBackgruondBox = '#3d4572';
 
 const boxSizeWidth = 400;
@@ -35,13 +36,15 @@ export default class Login extends Component {
           transform: 'translate(-50%,-50%)',
           borderRadius: '8px'
         }}>
-          <div>
-            <h2 style={{ 
-              color: '#fff', 
-              fontSize: '25px', 
-              padding: '8px 0 10px 0',
-              textAlign: 'center'
-            }}>Start building!</h2>
+          <div style={{
+            margin: '0 auto',
+            height: '75px',
+            width: '140px',
+            marginBottom: '15px'
+          }}>
+            <img src={logo} className="App-logo" alt="logo" style={{
+              width: '100%'
+            }} />
           </div>
           <div style={{
             width: '100%'
@@ -69,8 +72,8 @@ export default class Login extends Component {
               <LoginButton 
                 backgroundColorIcon='#2e62d2'
                 backgroundColorText='#265dca'
-                icon={<FontAwesomeIcon icon={faBitbucket} />}
-                text='Bitbucket'
+                icon={<FontAwesomeIcon icon={faGitlab} />}
+                text='GitLab'
                 link='#'
               />
             </div>
