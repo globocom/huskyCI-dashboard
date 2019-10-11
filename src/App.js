@@ -5,17 +5,9 @@ license that can be found in the LICENSE file.
 */
 
 import React from 'react';
+import Routes from './routes';
 import './App.css';
-import Dashboard from './components/Dashboard';
-import TopBar from './components/TopBar';
 
-const App = () => (
-  <div className="App">
-    <TopBar />
-    <div>
-      <Dashboard />
-    </div>
-  </div>
-);
+const App = () => <Routes />
 
 export default App;
