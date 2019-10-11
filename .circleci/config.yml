@@ -13,6 +13,7 @@ jobs:
       - run:
           name: "Build files"
           command: |
+            yarn cache clean
             yarn global add react-scripts
             yarn install
             make build
