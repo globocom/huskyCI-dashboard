@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import './TopBar.css';
-import logo from '../logo.png';
+import React, { Component } from "react";
+import "./TopBar.css";
+import logo from "../logo.png";
 
 class TopBar extends Component {
   constructor() {
     super();
     this.state = {
-      picture: 'https://avatars1.githubusercontent.com/u/83798?s=40&v=4',
-      name: 'huskyCI Dashboard',
-      username: 'huskyCI',
+      picture: "https://avatars1.githubusercontent.com/u/83798?s=40&v=4",
+      name: "huskyCI Dashboard",
+      username: "huskyCI",
     };
   }
 
@@ -23,20 +23,24 @@ class TopBar extends Component {
         <div className="menu-container" />
         <div className="user-container">
           <div className="user-info">
-            <div className="user-username">
-              {username}
-            </div>
-            <div className="user-name">
-              {name}
-            </div>
+            <div className="user-username">{username}</div>
+            <div className="user-name">{name}</div>
           </div>
           <div className="user-picture-container">
-            <img className="user-picture" src={picture} alt={`Profile of ${name}`} />
+            <img
+              className="user-picture"
+              src={picture}
+              alt={`Profile of ${name}`}
+            />
           </div>
-          <div class="user-menu">
+          <div className="user-menu">
             <ul>
-              <li><a href="#sign-out">Sign Out</a></li>
-              <li><a href="#profile">Profile</a></li>
+              <li>
+                <a href="#profile">Profile</a>
+              </li>
+              <li>
+                <a href="#sign-out">Sign Out</a>
+              </li>
             </ul>
           </div>
         </div>
