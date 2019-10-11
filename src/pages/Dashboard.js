@@ -4,18 +4,17 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 */
 
-import React from 'react';
-import Dashboard from './../components/Dashboard';
-import logo from './../logo.png';
+import React from "react";
+import Dashboard from "../components/Dashboard";
+import TopBar from "../components/TopBar";
 
-const DashboardPage = () =>
+const DashboardPage = () => (
   <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-    </header>
+    <TopBar />
     <div>
       <Dashboard />
     </div>
   </div>
+);
 
-export default DashboardPage
+export default DashboardPage;
