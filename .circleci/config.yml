@@ -15,5 +15,5 @@ jobs:
           command: |
             yarn cache clean
             yarn global add react-scripts
-            yarn install
+            make install
             make build
