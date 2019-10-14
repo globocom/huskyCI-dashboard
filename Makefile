@@ -38,7 +38,7 @@ help:
 
 ## Installs locally using install command.
 install:
-	yarn install
+	yarn install -f
 
 ## Push dashboard container to hub.docker
 push-container:
