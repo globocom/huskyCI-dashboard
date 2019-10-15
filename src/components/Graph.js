@@ -1,5 +1,5 @@
 import { Paper } from "@material-ui/core";
-import { Bar, Doughnut, Pie } from "react-chartjs-2";
+import { Bar, Doughnut, Pie, Line } from "react-chartjs-2";
 import PropTypes from "prop-types";
 import React from "react";
 
@@ -30,10 +30,26 @@ const dounghnutChartDefaultOptions = {
   },
 };
 
+const lineChartDefaultOptions = {
+  legend: {
+    display: true,
+  },
+  scales: {
+    yAxes: [
+      {
+        ticks: {
+          min: 0,
+        },
+      },
+    ],
+  },
+};
+
 const GraphType = {
   Pie: "Pie",
   Doughnut: "Doughnut",
   Bar: "Bar",
+  Line: "Line",
 };
 
 const asDoughnut = ({
@@ -42,11 +58,17 @@ const asDoughnut = ({
   height,
   options = dounghnutChartDefaultOptions,
 }) => <Doughnut data={data} width={width} height={height} options={options} />;
+
 const asPie = ({ data, width, height, options = pieChartDefaultOptions }) => (
   <Pie data={data} width={width} height={height} options={options} />
 );
+
 const asBar = ({ data, width, height, options = barChartDefaultOptions }) => (
   <Bar data={data} width={width} height={height} options={options} />
+);
+
+const asLine = ({ data, width, height, options = lineChartDefaultOptions }) => (
+  <Line data={data} width={width} height={height / 7} options={options} />
 );
 
 const renderGraph = props => {
@@ -57,6 +79,8 @@ const renderGraph = props => {
       return asDoughnut({ ...props });
     case GraphType.Pie:
       return asPie({ ...props });
+    case GraphType.Line:
+      return asLine({ ...props });
     default:
       return asBar({ ...props });
   }
