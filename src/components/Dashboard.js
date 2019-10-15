@@ -26,9 +26,8 @@ const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis`;
 const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
+const huskyCISeverityRoute = `${huskyCIAPIAddress}/stats/severity`;
 
-const colorPurple = "#ab92ea";
-const colorPurpleHover = "#967bdc";
 const colorBlue = "#4fc0e8";
 const colorBlueHover = "#3baeda";
 const colorRed = "#ed5564";
@@ -65,6 +64,12 @@ class Dashboard extends Component {
         brakeman: 0,
         safety: 0,
         bandit: 0,
+      },
+      severities: {
+        nosec: 0,
+        low: 0,
+        medium: 0,
+        high: 0,
       },
       repositories: 0,
       snackOpen: false,
@@ -176,6 +181,35 @@ class Dashboard extends Component {
             }
           });
         }
+        if (huskyRoute === huskyCISeverityRoute) {
+          let [numNosec, numLow, numMedium, numHigh] = [0, 0, 0, 0];
+          response.json().then(severityResultJSON => {
+            Object.keys(severityResultJSON).forEach(key => {
+              if (_.isEqual(severityResultJSON[key].severity, "nosecvulns")) {
+                numNosec = severityResultJSON[key].count;
+              }
+              if (_.isEqual(severityResultJSON[key].severity, "lowvulns")) {
+                numLow = severityResultJSON[key].count;
+              }
+              if (_.isEqual(severityResultJSON[key].severity, "mediumvulns")) {
+                numMedium = severityResultJSON[key].count;
+              }
+              if (_.isEqual(severityResultJSON[key].severity, "highvulns")) {
+                numHigh = severityResultJSON[key].count;
+              }
+            });
+            const totalSeverities = {
+              nosec: numNosec,
+              low: numLow,
+              medium: numMedium,
+              high: numHigh,
+            };
+            const { severities } = this.state;
+            if (!_.isEqual(severities, totalSeverities)) {
+              this.setState({ severities: totalSeverities });
+            }
+          });
+        }
         if (huskyRoute === huskyCIContainerRoute) {
           let [
             numGosecResult,
@@ -259,7 +293,7 @@ class Dashboard extends Component {
       huskyCIAuthorRoute,
       huskyCIAnalysisRoute,
       huskyCILanguageRoute,
-      huskyCIContainerRoute,
+      huskyCISeverityRoute,
       huskyCIRepositoryRoute,
     ];
     huskyCIRoutes.map(async huskyRoute => {
@@ -271,6 +305,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    // Languages
     const { languages } = this.state;
     const numGoFound = languages.go;
     const numPythonFound = languages.python;
@@ -291,6 +326,7 @@ class Dashboard extends Component {
         },
       ],
     };
+    // Analyses
     const { resultsAnalysis } = this.state;
     const numFailedFound = [resultsAnalysis.failed];
     const numWarningFound = [resultsAnalysis.warning];
@@ -316,47 +352,23 @@ class Dashboard extends Component {
         },
       ],
     };
-    const { containers } = this.state;
-    const numGosecFound = containers.gosec;
-    const numNpmauditFound = containers.npmAudit;
-    const numYarnauditFound = containers.yarnAudit;
-    const numBrakemanFound = containers.brakeman;
-    const numSafetyFound = containers.safety;
-    const numBanditFound = containers.bandit;
-    const infoContainers = {
-      labels: [
-        "Gosec",
-        "Npm Audit",
-        "Yarn Audit",
-        "Brakeman",
-        "Safety",
-        "Bandit",
-      ],
+    // Severities
+    const { severities } = this.state;
+    const numNoSec = severities.nosec;
+    const numLow = severities.low;
+    const numMedium = severities.medium;
+    const numHigh = severities.high;
+    const infoSeverities = {
+      labels: ["High", "Medium", "Low", "Nosec"],
       datasets: [
         {
-          data: [
-            numGosecFound,
-            numNpmauditFound,
-            numYarnauditFound,
-            numBrakemanFound,
-            numSafetyFound,
-            numBanditFound,
-          ],
-          backgroundColor: [
-            colorBlue,
-            colorPurple,
-            colorGray,
-            colorRed,
-            colorGreen,
-            colorYellow,
-          ],
+          data: [numHigh, numMedium, numLow, numNoSec],
+          backgroundColor: [colorRed, colorYellow, colorBlue, colorGray],
           hoverBackgroundColor: [
-            colorBlueHover,
-            colorPurpleHover,
-            colorGrayHover,
             colorRedHover,
-            colorGreenHover,
             colorYellowHover,
+            colorBlueHover,
+            colorGrayHover,
           ],
         },
       ],
@@ -394,7 +406,7 @@ class Dashboard extends Component {
             <Graph data={infoLanguages} type={GraphType.Bar} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <Graph data={infoContainers} type={GraphType.Pie} />
+            <Graph data={infoSeverities} type={GraphType.Bar} />
           </Grid>
         </Grid>
 
