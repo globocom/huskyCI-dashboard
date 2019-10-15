@@ -26,6 +26,7 @@ const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis`;
 const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
 const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
 const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
+const huskyCIHistoryAnalysisRoute = `${huskyCIAPIAddress}/stats/historyanalysis?time_range=today`;
 
 const colorPurple = "#ab92ea";
 const colorPurpleHover = "#967bdc";
@@ -70,6 +71,58 @@ class Dashboard extends Component {
       snackOpen: false,
       variantValue: "",
       snackMessage: "",
+      passingList: [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ],
+      failingList: [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ],
     };
     this.timeoutID = 0;
     this.refreshCharts();
@@ -90,6 +143,8 @@ class Dashboard extends Component {
           this.openSnack("error", "Service is unavailable");
           return response.status;
         }
+
+        // get authors metrics
         if (huskyRoute === huskyCIAuthorRoute) {
           response.json().then(authorResultJSON => {
             if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
@@ -101,6 +156,8 @@ class Dashboard extends Component {
             }
           });
         }
+
+        // get Analysis metrics + Results graph
         if (huskyRoute === huskyCIAnalysisRoute) {
           response.json().then(analysisResultJSON => {
             let [
@@ -142,6 +199,98 @@ class Dashboard extends Component {
             }
           });
         }
+
+        // get History graph
+        if (huskyRoute === huskyCIHistoryAnalysisRoute) {
+          response.json().then(historyResultJSON => {
+            const [newPassingList, newFailingList] = [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+              ],
+            ];
+
+            Object.keys(historyResultJSON).forEach(key => {
+              const rawDateJSON = Date.parse(historyResultJSON[key].date);
+              const hour = new Date(rawDateJSON).getHours();
+
+              historyResultJSON[key].results.forEach(currentResult => {
+                if (currentResult.result === "passed") {
+                  newPassingList[hour] = currentResult.count;
+                }
+
+                if (currentResult.result === "failed") {
+                  newFailingList[hour] = currentResult.count;
+                }
+              });
+            });
+
+            const { passingList } = this.state;
+            const { failingList } = this.state;
+
+            if (!_.isEqual(passingList, newPassingList)) {
+              this.setState({
+                passingList: newPassingList,
+              });
+            }
+
+            if (!_.isEqual(failingList, newFailingList)) {
+              this.setState({
+                failingList: newFailingList,
+              });
+            }
+          });
+        }
+
+        // get languages graph
         if (huskyRoute === huskyCILanguageRoute) {
           let [
             numGolangResult,
@@ -176,6 +325,8 @@ class Dashboard extends Component {
             }
           });
         }
+
+        // get languages graph
         if (huskyRoute === huskyCIContainerRoute) {
           let [
             numGosecResult,
@@ -220,6 +371,8 @@ class Dashboard extends Component {
             }
           });
         }
+
+        // get repositories metrics
         if (huskyRoute === huskyCIRepositoryRoute) {
           let newRepositoryResult = 0;
           response.json().then(repositoryResultJSON => {
@@ -230,8 +383,10 @@ class Dashboard extends Component {
             }
           });
         }
+
         return response.status;
       })
+
       .catch(() => {
         this.openSnack("error", "Service is unavailable");
         return 500;
@@ -261,6 +416,7 @@ class Dashboard extends Component {
       huskyCILanguageRoute,
       huskyCIContainerRoute,
       huskyCIRepositoryRoute,
+      huskyCIHistoryAnalysisRoute,
     ];
     huskyCIRoutes.map(async huskyRoute => {
       const status = await this.callHuskyAPI(huskyRoute);
@@ -296,7 +452,7 @@ class Dashboard extends Component {
     const numWarningFound = [resultsAnalysis.warning];
     const numPassedFound = [resultsAnalysis.passed];
     const numErrorFound = [resultsAnalysis.error];
-    const infoAnalysis = {
+    const infoStatus = {
       labels: ["Failed", "Warning", "Passed", "Error"],
       datasets: [
         {
@@ -363,14 +519,88 @@ class Dashboard extends Component {
     };
 
     const { numAuthors } = this.state;
-
     const { numAnalysis } = this.state;
-
     const { repositories } = this.state;
-
-    const { snackOpen } = this.state;
     const { variantValue } = this.state;
+    const { snackOpen } = this.state;
     const { snackMessage } = this.state;
+    const { failingList } = this.state;
+    const { passingList } = this.state;
+
+    const infoHistoryAnalysis = {
+      labels: [
+        "00:00h",
+        "01:00h",
+        "02:00h",
+        "03:00h",
+        "04:00h",
+        "05:00h",
+        "06:00h",
+        "07:00h",
+        "08:00h",
+        "09:00h",
+        "10:00h",
+        "11:00h",
+        "12:00h",
+        "13:00h",
+        "14:00h",
+        "15:00h",
+        "16:00h",
+        "17:00h",
+        "18:00h",
+        "19:00h",
+        "20:00h",
+        "21:00h",
+        "22:00h",
+        "23:00h",
+      ],
+      datasets: [
+        {
+          label: "Passing Analyses",
+          fill: false,
+          lineTension: 0.1,
+          borderWidth: 5,
+          backgroundColor: colorGreen,
+          borderColor: colorGreenHover,
+          borderCapStyle: "butt",
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: "miter",
+          pointBorderColor: colorGreenHover,
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 4,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: colorGreen,
+          pointHoverBorderColor: colorGreenHover,
+          pointHoverBorderWidth: 4,
+          pointRadius: 3,
+          pointHitRadius: 10,
+          data: passingList,
+        },
+        {
+          label: "Failing Analyses",
+          fill: false,
+          lineTension: 0.1,
+          borderWidth: 5,
+          backgroundColor: colorRed,
+          borderColor: colorRedHover,
+          borderCapStyle: "butt",
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: "miter",
+          pointBorderColor: colorRedHover,
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 4,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: colorRed,
+          pointHoverBorderColor: colorRedHover,
+          pointHoverBorderWidth: 4,
+          pointRadius: 3,
+          pointHitRadius: 10,
+          data: failingList,
+        },
+      ],
+    };
 
     return (
       <div>
@@ -386,9 +616,15 @@ class Dashboard extends Component {
           </Grid>
         </Grid>
 
+        <Grid container spacing={3} style={{ padding: "0rem 1rem 0rem 1rem" }}>
+          <Grid item xs={12} sm={12}>
+            <Graph data={infoHistoryAnalysis} type={GraphType.Line} />
+          </Grid>
+        </Grid>
+
         <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} md={4}>
-            <Graph data={infoAnalysis} type={GraphType.Pie} />
+            <Graph data={infoStatus} type={GraphType.Pie} />
           </Grid>
           <Grid item xs={12} md={4}>
             <Graph data={infoLanguages} type={GraphType.Bar} />
