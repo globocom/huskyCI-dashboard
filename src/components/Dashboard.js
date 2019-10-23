@@ -21,13 +21,13 @@ const styles = {
 const snackDurationInMS = 5000;
 
 const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
-const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author`;
-const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis`;
-const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language`;
-const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container`;
-const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository`;
+const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author?time_range=today`;
+const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis?time_range=today`;
+const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language?time_range=today`;
+const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container?time_range=today`;
+const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository?time_range=today`;
 const huskyCIHistoryAnalysisRoute = `${huskyCIAPIAddress}/stats/historyanalysis?time_range=today`;
-const huskyCISeverityRoute = `${huskyCIAPIAddress}/stats/severity`;
+const huskyCISeverityRoute = `${huskyCIAPIAddress}/stats/severity?time_range=today`;
 
 const colorBlue = "#4fc0e8";
 const colorBlueHover = "#3baeda";
