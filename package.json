@@ -3,15 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.20",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.5",
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.4.3",
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
+    "jest-canvas-mock": "^2.1.1",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.9.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.1.2"
   },
   "scripts": {
@@ -40,9 +46,34 @@
     "babel-eslint": "^10.0.3",
     "eslint": "6.1.0",
     "eslint-config-airbnb": "18.0.1",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-react-hooks": "^1.7.0"
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "husky": "^3.0.8",
+    "lint-staged": "^9.4.1",
+    "prettier": "^1.18.2"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "resolutions": {
+    "react-scripts/typescript": "^3.6.0"
   }
 }

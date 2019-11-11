@@ -5,19 +5,9 @@ license that can be found in the LICENSE file.
 */
 
 import React from 'react';
-import logo from './logo.png';
+import Routes from './routes';
 import './App.css';
-import Dashboard from './components/Dashboard';
 
-const App = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-    </header>
-    <div>
-      <Dashboard />
-    </div>
-  </div>
-);
+const App = () => <Routes />
 
 export default App;

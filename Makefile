@@ -22,6 +22,11 @@ build-container:
 check-sec:
 	yarn audit
 
+## Creates  environment variable for local development.
+generate-local-env:
+	chmod +x generate-local-env.sh
+	./generate-local-env.sh
+
 ## Shows this help message.
 help:
 	printf "\n${COLOR_YELLOW}${PROJECT}\n------\n${COLOR_RESET}"
@@ -37,8 +42,8 @@ help:
 	printf "\n"
 
 ## Installs locally using install command.
-install:
-	yarn install
+install: generate-local-env
+	yarn install -f
 
 ## Push dashboard container to hub.docker
 push-container:
