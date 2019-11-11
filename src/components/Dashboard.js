@@ -5,9 +5,9 @@ license that can be found in the LICENSE file.
 */
 
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
-import _ from "lodash";
+import isEqual from 'lodash/isEqual';
 import SnackComponent from "./SnackComponent";
 import Metric from "./Metric";
 import { Graph, GraphType } from "./Graph";
@@ -155,7 +155,7 @@ class Dashboard extends Component {
             if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
               const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
               const { numAuthors } = this.state;
-              if (!_.isEqual(numAuthors, newNumAuthorsResult)) {
+              if (!isEqual(numAuthors, newNumAuthorsResult)) {
                 this.setState({ numAuthors: newNumAuthorsResult });
               }
             }
@@ -172,16 +172,16 @@ class Dashboard extends Component {
               numErrorResult,
             ] = [0, 0, 0, 0];
             Object.keys(analysisResultJSON).forEach(key => {
-              if (_.isEqual(analysisResultJSON[key].result, "failed")) {
+              if (isEqual(analysisResultJSON[key].result, "failed")) {
                 numFailedResult = analysisResultJSON[key].count;
               }
-              if (_.isEqual(analysisResultJSON[key].result, "warning")) {
+              if (isEqual(analysisResultJSON[key].result, "warning")) {
                 numWarningResult = analysisResultJSON[key].count;
               }
-              if (_.isEqual(analysisResultJSON[key].result, "passed")) {
+              if (isEqual(analysisResultJSON[key].result, "passed")) {
                 numPassedResult = analysisResultJSON[key].count;
               }
-              if (_.isEqual(analysisResultJSON[key].result, "error")) {
+              if (isEqual(analysisResultJSON[key].result, "error")) {
                 numErrorResult = analysisResultJSON[key].count;
               }
             });
@@ -191,7 +191,7 @@ class Dashboard extends Component {
               numPassedResult +
               numErrorResult;
             const { numAnalysis } = this.state;
-            if (!_.isEqual(numAnalysis, totalAnalyses)) {
+            if (!isEqual(numAnalysis, totalAnalyses)) {
               this.setState({
                 numAnalysis: totalAnalyses,
                 resultsAnalysis: {
@@ -281,13 +281,13 @@ class Dashboard extends Component {
             const { passingList } = this.state;
             const { failingList } = this.state;
 
-            if (!_.isEqual(passingList, newPassingList)) {
+            if (!isEqual(passingList, newPassingList)) {
               this.setState({
                 passingList: newPassingList,
               });
             }
 
-            if (!_.isEqual(failingList, newFailingList)) {
+            if (!isEqual(failingList, newFailingList)) {
               this.setState({
                 failingList: newFailingList,
               });
@@ -305,16 +305,16 @@ class Dashboard extends Component {
           ] = [0, 0, 0, 0];
           response.json().then(languageResultJSON => {
             Object.keys(languageResultJSON).forEach(key => {
-              if (_.isEqual(languageResultJSON[key].language, "Go")) {
+              if (isEqual(languageResultJSON[key].language, "Go")) {
                 numGolangResult = languageResultJSON[key].count;
               }
-              if (_.isEqual(languageResultJSON[key].language, "Python")) {
+              if (isEqual(languageResultJSON[key].language, "Python")) {
                 numPythonResult = languageResultJSON[key].count;
               }
-              if (_.isEqual(languageResultJSON[key].language, "Ruby")) {
+              if (isEqual(languageResultJSON[key].language, "Ruby")) {
                 numRubyResult = languageResultJSON[key].count;
               }
-              if (_.isEqual(languageResultJSON[key].language, "JavaScript")) {
+              if (isEqual(languageResultJSON[key].language, "JavaScript")) {
                 numJavaScriptResult = languageResultJSON[key].count;
               }
             });
@@ -325,7 +325,7 @@ class Dashboard extends Component {
               javascript: numJavaScriptResult,
             };
             const { languages } = this.state;
-            if (!_.isEqual(languages, totalLanguages)) {
+            if (!isEqual(languages, totalLanguages)) {
               this.setState({ languages: totalLanguages });
             }
           });
@@ -336,16 +336,16 @@ class Dashboard extends Component {
           let [numNosec, numLow, numMedium, numHigh] = [0, 0, 0, 0];
           response.json().then(severityResultJSON => {
             Object.keys(severityResultJSON).forEach(key => {
-              if (_.isEqual(severityResultJSON[key].severity, "nosecvulns")) {
+              if (isEqual(severityResultJSON[key].severity, "nosecvulns")) {
                 numNosec = severityResultJSON[key].count;
               }
-              if (_.isEqual(severityResultJSON[key].severity, "lowvulns")) {
+              if (isEqual(severityResultJSON[key].severity, "lowvulns")) {
                 numLow = severityResultJSON[key].count;
               }
-              if (_.isEqual(severityResultJSON[key].severity, "mediumvulns")) {
+              if (isEqual(severityResultJSON[key].severity, "mediumvulns")) {
                 numMedium = severityResultJSON[key].count;
               }
-              if (_.isEqual(severityResultJSON[key].severity, "highvulns")) {
+              if (isEqual(severityResultJSON[key].severity, "highvulns")) {
                 numHigh = severityResultJSON[key].count;
               }
             });
@@ -356,7 +356,7 @@ class Dashboard extends Component {
               high: numHigh,
             };
             const { severities } = this.state;
-            if (!_.isEqual(severities, totalSeverities)) {
+            if (!isEqual(severities, totalSeverities)) {
               this.setState({ severities: totalSeverities });
             }
           });
@@ -374,22 +374,22 @@ class Dashboard extends Component {
           ] = [0, 0, 0, 0, 0, 0];
           response.json().then(containerResultJSON => {
             Object.keys(containerResultJSON).forEach(key => {
-              if (_.isEqual(containerResultJSON[key].container, "gosec")) {
+              if (isEqual(containerResultJSON[key].container, "gosec")) {
                 numGosecResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, "npmaudit")) {
+              if (isEqual(containerResultJSON[key].container, "npmaudit")) {
                 numNpmauditResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, "yarnaudit")) {
+              if (isEqual(containerResultJSON[key].container, "yarnaudit")) {
                 numYarnauditResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, "brakeman")) {
+              if (isEqual(containerResultJSON[key].container, "brakeman")) {
                 numBrakemanResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, "safety")) {
+              if (isEqual(containerResultJSON[key].container, "safety")) {
                 numSafetyResult = containerResultJSON[key].count;
               }
-              if (_.isEqual(containerResultJSON[key].container, "bandit")) {
+              if (isEqual(containerResultJSON[key].container, "bandit")) {
                 numBanditResult = containerResultJSON[key].count;
               }
             });
@@ -402,7 +402,7 @@ class Dashboard extends Component {
               bandit: numBanditResult,
             };
             const { containers } = this.state;
-            if (!_.isEqual(containers, totalContainers)) {
+            if (!isEqual(containers, totalContainers)) {
               this.setState({ containers: totalContainers });
             }
           });
@@ -414,7 +414,7 @@ class Dashboard extends Component {
           response.json().then(repositoryResultJSON => {
             newRepositoryResult = repositoryResultJSON[0].totalRepositories;
             const { repositories } = this.state;
-            if (!_.isEqual(repositories, newRepositoryResult)) {
+            if (!isEqual(repositories, newRepositoryResult)) {
               this.setState({ repositories: newRepositoryResult });
             }
           });
