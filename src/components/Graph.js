@@ -97,7 +97,7 @@ Graph.defaultProps = {
 
 Graph.propTypes = {
   type: PropTypes.string,
-  data: PropTypes.node.isRequired,
+  data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   boxMargin: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,

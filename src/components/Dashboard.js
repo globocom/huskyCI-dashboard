@@ -5,9 +5,9 @@ license that can be found in the LICENSE file.
 */
 
 import React, { Component } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import isEqual from 'lodash/isEqual';
+import isEqual from "lodash/isEqual";
 import SnackComponent from "./SnackComponent";
 import Metric from "./Metric";
 import { Graph, GraphType } from "./Graph";
@@ -21,13 +21,13 @@ const styles = {
 const snackDurationInMS = 5000;
 
 const huskyCIAPIAddress = process.env.REACT_APP_HUSKYCI_FE_API_ADDRESS;
-const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author?time_range=today`;
-const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis?time_range=today`;
-const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language?time_range=today`;
-const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container?time_range=today`;
-const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository?time_range=today`;
-const huskyCIHistoryAnalysisRoute = `${huskyCIAPIAddress}/stats/historyanalysis?time_range=today`;
-const huskyCISeverityRoute = `${huskyCIAPIAddress}/stats/severity?time_range=today`;
+const huskyCIAuthorRoute = `${huskyCIAPIAddress}/stats/author?`;
+const huskyCIAnalysisRoute = `${huskyCIAPIAddress}/stats/analysis?`;
+const huskyCILanguageRoute = `${huskyCIAPIAddress}/stats/language?`;
+const huskyCIContainerRoute = `${huskyCIAPIAddress}/stats/container?`;
+const huskyCIRepositoryRoute = `${huskyCIAPIAddress}/stats/repository?`;
+const huskyCIHistoryAnalysisRoute = `${huskyCIAPIAddress}/stats/historyanalysis?`;
+const huskyCISeverityRoute = `${huskyCIAPIAddress}/stats/severity?`;
 
 const colorBlue = "#4fc0e8";
 const colorBlueHover = "#3baeda";
@@ -41,9 +41,30 @@ const colorGray = "#ccd0d9";
 const colorGrayHover = "#aab2bd";
 
 class Dashboard extends Component {
+  static constructDateArray() {
+    let array = [];
+    const day = 86400000;
+    const dateObj = Date.now();
+    for (let count = 6; count >= 0; count -= 1) {
+      array.push(Math.round(dateObj - day * count));
+    }
+    array = Object.values(array).map(Dashboard.getDateFromEpoch);
+    return array;
+  }
+
+  static getDateFromEpoch(num) {
+    const date = Number(num);
+    return new Intl.DateTimeFormat("en-US").format(new Date(date));
+  }
+
+  static getHoursFromEpoch(num) {
+    return Number(new Date(num).getHours());
+  }
+
   constructor(props) {
     super(props);
     this.state = {
+      timeFilter: "time_range=last30days",
       numAuthors: 0,
       numAnalysis: 0,
       resultsAnalysis: {
@@ -76,58 +97,8 @@ class Dashboard extends Component {
       snackOpen: false,
       variantValue: "",
       snackMessage: "",
-      passingList: [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      ],
-      failingList: [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      ],
+      infoHistoryAnalysis: {},
+      infoHistoryAnalysisLabels: Dashboard.constructDateArray(),
     };
     this.timeoutID = 0;
     this.refreshCharts();
@@ -150,7 +121,8 @@ class Dashboard extends Component {
         }
 
         // get authors metrics
-        if (huskyRoute === huskyCIAuthorRoute) {
+        const { timeFilter } = this.state;
+        if (huskyRoute === `${huskyCIAuthorRoute}${timeFilter}`) {
           response.json().then(authorResultJSON => {
             if (Array.isArray(authorResultJSON) && authorResultJSON.length) {
               const newNumAuthorsResult = authorResultJSON[0].totalAuthors;
@@ -163,7 +135,7 @@ class Dashboard extends Component {
         }
 
         // get Analysis metrics + Results graph
-        if (huskyRoute === huskyCIAnalysisRoute) {
+        if (huskyRoute === `${huskyCIAnalysisRoute}${timeFilter}`) {
           response.json().then(analysisResultJSON => {
             let [
               numFailedResult,
@@ -206,97 +178,86 @@ class Dashboard extends Component {
         }
 
         // get History graph
-        if (huskyRoute === huskyCIHistoryAnalysisRoute) {
+        if (huskyRoute === `${huskyCIHistoryAnalysisRoute}${timeFilter}`) {
+          let infoHistoryAnalysisTmp = {};
+          let infoHistoryAnalysisLabelsTmp = [];
+          const failingListTmp = [];
+          const passingListTmp = [];
           response.json().then(historyResultJSON => {
-            const [newPassingList, newFailingList] = [
-              [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-              ],
-              [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-              ],
-            ];
-
+            let infoHistoryAnalysisKey = "";
             Object.keys(historyResultJSON).forEach(key => {
               const rawDateJSON = Date.parse(historyResultJSON[key].date);
-              const hour = new Date(rawDateJSON).getHours();
-
+              if (timeFilter === "time_range=today") {
+                infoHistoryAnalysisKey = rawDateJSON;
+              } else {
+                const epoch = Date.parse(
+                  new Intl.DateTimeFormat("en-US").format(new Date(rawDateJSON))
+                );
+                infoHistoryAnalysisKey = epoch;
+              }
+              if (
+                Object.keys(infoHistoryAnalysisTmp).indexOf(
+                  `${infoHistoryAnalysisKey}`
+                ) === -1
+              ) {
+                infoHistoryAnalysisTmp[infoHistoryAnalysisKey] = {
+                  passed: 0,
+                  failed: 0,
+                };
+              }
               historyResultJSON[key].results.forEach(currentResult => {
-                if (currentResult.result === "passed") {
-                  newPassingList[hour] = currentResult.count;
-                }
-
-                if (currentResult.result === "failed") {
-                  newFailingList[hour] = currentResult.count;
+                if (currentResult.result !== "") {
+                  infoHistoryAnalysisTmp[infoHistoryAnalysisKey][
+                    currentResult.result
+                  ] += currentResult.count;
                 }
               });
             });
-
+            infoHistoryAnalysisTmp = this.fillTimeRangeGaps(
+              infoHistoryAnalysisTmp
+            );
+            Object.keys(infoHistoryAnalysisTmp)
+              .sort()
+              .forEach(key => {
+                failingListTmp.push(infoHistoryAnalysisTmp[key].failed);
+                passingListTmp.push(infoHistoryAnalysisTmp[key].passed);
+              });
+            const { infoHistoryAnalysis } = this.state;
             const { passingList } = this.state;
             const { failingList } = this.state;
+            const { infoHistoryAnalysisLabels } = this.state;
 
-            if (!isEqual(passingList, newPassingList)) {
-              this.setState({
-                passingList: newPassingList,
-              });
+            if (timeFilter === "time_range=today") {
+              infoHistoryAnalysisLabelsTmp = Object.keys(infoHistoryAnalysisTmp)
+                .sort()
+                .map(Dashboard.getHoursFromEpoch);
+            } else {
+              infoHistoryAnalysisLabelsTmp = Object.keys(infoHistoryAnalysisTmp)
+                .sort()
+                .map(Dashboard.getDateFromEpoch);
             }
-
-            if (!isEqual(failingList, newFailingList)) {
+            if (
+              Object.values(infoHistoryAnalysis) !==
+                Object.values(infoHistoryAnalysisTmp) ||
+              !isEqual(
+                infoHistoryAnalysisLabels,
+                infoHistoryAnalysisLabelsTmp
+              ) ||
+              !isEqual(passingList, passingListTmp) ||
+              !isEqual(failingList, failingListTmp)
+            ) {
               this.setState({
-                failingList: newFailingList,
+                infoHistoryAnalysis: infoHistoryAnalysisTmp,
+                infoHistoryAnalysisLabels: infoHistoryAnalysisLabelsTmp,
+                passingList: passingListTmp,
+                failingList: failingListTmp,
               });
             }
           });
         }
 
         // get languages graph
-        if (huskyRoute === huskyCILanguageRoute) {
+        if (huskyRoute === `${huskyCILanguageRoute}${timeFilter}`) {
           let [
             numGolangResult,
             numPythonResult,
@@ -330,9 +291,9 @@ class Dashboard extends Component {
             }
           });
         }
-        
+
         // get severity graph
-        if (huskyRoute === huskyCISeverityRoute) {
+        if (huskyRoute === `${huskyCISeverityRoute}${timeFilter}`) {
           let [numNosec, numLow, numMedium, numHigh] = [0, 0, 0, 0];
           response.json().then(severityResultJSON => {
             Object.keys(severityResultJSON).forEach(key => {
@@ -363,7 +324,7 @@ class Dashboard extends Component {
         }
 
         // get container graph
-        if (huskyRoute === huskyCIContainerRoute) {
+        if (huskyRoute === `${huskyCIContainerRoute}${timeFilter}`) {
           let [
             numGosecResult,
             numNpmauditResult,
@@ -409,7 +370,7 @@ class Dashboard extends Component {
         }
 
         // get repositories metrics
-        if (huskyRoute === huskyCIRepositoryRoute) {
+        if (huskyRoute === `${huskyCIRepositoryRoute}${timeFilter}`) {
           let newRepositoryResult = 0;
           response.json().then(repositoryResultJSON => {
             newRepositoryResult = repositoryResultJSON[0].totalRepositories;
@@ -447,20 +408,48 @@ class Dashboard extends Component {
 
   refreshCharts = () => {
     const huskyCIRoutes = [
+      huskyCIHistoryAnalysisRoute,
       huskyCIAuthorRoute,
       huskyCIAnalysisRoute,
       huskyCILanguageRoute,
       huskyCISeverityRoute,
       huskyCIRepositoryRoute,
-      huskyCIHistoryAnalysisRoute,
     ];
     huskyCIRoutes.map(async huskyRoute => {
-      const status = await this.callHuskyAPI(huskyRoute);
+      const { timeFilter } = this.state;
+      const status = await this.callHuskyAPI(`${huskyRoute}${timeFilter}`);
       if (status !== 200) {
         clearInterval(this.timeoutID);
       }
     });
   };
+
+  fillTimeRangeGaps(obj) {
+    const { timeFilter } = this.state;
+    const final = obj;
+    let increment;
+    const keys = Object.keys(obj).sort();
+    const first = keys[0];
+    if (timeFilter === "time_range=today") {
+      increment = 3600000;
+      for (let counter = 0; counter < 24; counter += 1) {
+        const current = String(Number(first) + increment * counter);
+        if (!keys.includes(current)) {
+          final[current] = { passed: 0, failed: 0 };
+        }
+      }
+    } else {
+      increment = 86400000;
+      const numDays = timeFilter.match(/\d+/)[0];
+      for (let counter = 0; counter < numDays; counter += 1) {
+        const current = String(Number(first) + increment * counter);
+        if (!keys.includes(current)) {
+          final[current] = { passed: 0, failed: 0 };
+        }
+      }
+    }
+    return final;
+  }
 
   render() {
     // Languages
@@ -538,36 +527,11 @@ class Dashboard extends Component {
     const { variantValue } = this.state;
     const { snackOpen } = this.state;
     const { snackMessage } = this.state;
+    const { infoHistoryAnalysisLabels } = this.state;
     const { failingList } = this.state;
     const { passingList } = this.state;
-
-    const infoHistoryAnalysis = {
-      labels: [
-        "00:00h",
-        "01:00h",
-        "02:00h",
-        "03:00h",
-        "04:00h",
-        "05:00h",
-        "06:00h",
-        "07:00h",
-        "08:00h",
-        "09:00h",
-        "10:00h",
-        "11:00h",
-        "12:00h",
-        "13:00h",
-        "14:00h",
-        "15:00h",
-        "16:00h",
-        "17:00h",
-        "18:00h",
-        "19:00h",
-        "20:00h",
-        "21:00h",
-        "22:00h",
-        "23:00h",
-      ],
+    const infoHistoryAnalysisData = {
+      labels: infoHistoryAnalysisLabels,
       datasets: [
         {
           label: "Passing Analyses",
@@ -620,19 +584,19 @@ class Dashboard extends Component {
       <div>
         <Grid container spacing={3} style={{ padding: "1rem" }}>
           <Grid item xs={12} sm={4}>
-            <Metric title="Developers" value={numAuthors} />
+            <Metric title="Developers" value={String(numAuthors)} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Metric title="Analyses" value={numAnalysis} />
+            <Metric title="Analyses" value={String(numAnalysis)} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Metric title="Repositories" value={repositories} />
+            <Metric title="Repositories" value={String(repositories)} />
           </Grid>
         </Grid>
 
         <Grid container spacing={3} style={{ padding: "0rem 1rem 0rem 1rem" }}>
           <Grid item xs={12} sm={12}>
-            <Graph data={infoHistoryAnalysis} type={GraphType.Line} />
+            <Graph data={infoHistoryAnalysisData} type={GraphType.Line} />
           </Grid>
         </Grid>
 
