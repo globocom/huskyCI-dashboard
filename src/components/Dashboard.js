@@ -183,6 +183,7 @@ class Dashboard extends Component {
           let infoHistoryAnalysisLabelsTmp = [];
           const failingListTmp = [];
           const passingListTmp = [];
+          const erroringListTmp = [];
           response.json().then(historyResultJSON => {
             let infoHistoryAnalysisKey = "";
             Object.keys(historyResultJSON).forEach(key => {
@@ -203,6 +204,7 @@ class Dashboard extends Component {
                 infoHistoryAnalysisTmp[infoHistoryAnalysisKey] = {
                   passed: 0,
                   failed: 0,
+                  error: 0,
                 };
               }
               historyResultJSON[key].results.forEach(currentResult => {
@@ -221,10 +223,12 @@ class Dashboard extends Component {
               .forEach(key => {
                 failingListTmp.push(infoHistoryAnalysisTmp[key].failed);
                 passingListTmp.push(infoHistoryAnalysisTmp[key].passed);
+                erroringListTmp.push(infoHistoryAnalysisTmp[key].error);
               });
             const { infoHistoryAnalysis } = this.state;
             const { passingList } = this.state;
             const { failingList } = this.state;
+            const { erroringList } = this.state;
             const { infoHistoryAnalysisLabels } = this.state;
 
             if (timeFilter === "time_range=today") {
@@ -244,13 +248,15 @@ class Dashboard extends Component {
                 infoHistoryAnalysisLabelsTmp
               ) ||
               !isEqual(passingList, passingListTmp) ||
-              !isEqual(failingList, failingListTmp)
+              !isEqual(failingList, failingListTmp) ||
+              !isEqual(erroringList, erroringListTmp)
             ) {
               this.setState({
                 infoHistoryAnalysis: infoHistoryAnalysisTmp,
                 infoHistoryAnalysisLabels: infoHistoryAnalysisLabelsTmp,
                 passingList: passingListTmp,
                 failingList: failingListTmp,
+                erroringList: erroringListTmp,
               });
             }
           });
@@ -435,7 +441,7 @@ class Dashboard extends Component {
       for (let counter = 0; counter < 24; counter += 1) {
         const current = String(Number(first) + increment * counter);
         if (!keys.includes(current)) {
-          final[current] = { passed: 0, failed: 0 };
+          final[current] = { passed: 0, failed: 0, error: 0 };
         }
       }
     } else {
@@ -444,7 +450,7 @@ class Dashboard extends Component {
       for (let counter = 0; counter < numDays; counter += 1) {
         const current = String(Number(first) + increment * counter);
         if (!keys.includes(current)) {
-          final[current] = { passed: 0, failed: 0 };
+          final[current] = { passed: 0, failed: 0, error: 0 };
         }
       }
     }
@@ -530,6 +536,7 @@ class Dashboard extends Component {
     const { infoHistoryAnalysisLabels } = this.state;
     const { failingList } = this.state;
     const { passingList } = this.state;
+    const { erroringList } = this.state;
     const infoHistoryAnalysisData = {
       labels: infoHistoryAnalysisLabels,
       datasets: [
@@ -545,7 +552,7 @@ class Dashboard extends Component {
           borderDashOffset: 0.0,
           borderJoinStyle: "miter",
           pointBorderColor: colorGreenHover,
-          pointBackgroundColor: "#fff",
+          pointBackgroundColor: colorGreen,
           pointBorderWidth: 4,
           pointHoverRadius: 5,
           pointHoverBackgroundColor: colorGreen,
@@ -567,7 +574,7 @@ class Dashboard extends Component {
           borderDashOffset: 0.0,
           borderJoinStyle: "miter",
           pointBorderColor: colorRedHover,
-          pointBackgroundColor: "#fff",
+          pointBackgroundColor: colorRed,
           pointBorderWidth: 4,
           pointHoverRadius: 5,
           pointHoverBackgroundColor: colorRed,
@@ -576,6 +583,28 @@ class Dashboard extends Component {
           pointRadius: 3,
           pointHitRadius: 10,
           data: failingList,
+        },
+        {
+          label: "Error Analyses",
+          fill: false,
+          lineTension: 0.1,
+          borderWidth: 5,
+          backgroundColor: colorGray,
+          borderColor: colorGrayHover,
+          borderCapStyle: "butt",
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: "miter",
+          pointBorderColor: colorGrayHover,
+          pointBackgroundColor: colorGray,
+          pointBorderWidth: 4,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: colorGray,
+          pointHoverBorderColor: colorGrayHover,
+          pointHoverBorderWidth: 4,
+          pointRadius: 3,
+          pointHitRadius: 10,
+          data: erroringList,
         },
       ],
     };
