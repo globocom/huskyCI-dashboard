@@ -2,3 +2,4 @@ hooks:
   build:
   - yarn global add react-scripts serve
   - yarn build
+  - ls | grep -v 'build' | xargs rm -rf 
