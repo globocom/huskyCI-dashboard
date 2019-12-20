@@ -11,7 +11,7 @@
 
 The main goal of this project is to provide a front-end for every huskyCI user to check the stats of the analyses done. If you don't know yet what huskyCI is, check it out [here](https://github.com/globocom/huskyCI).
 
-<p align="center"><img src="charts.png"/></p>
+<p align="center"><img src="https://github.com/globocom/huskyCI/blob/master/huskyCI-dashboard.png"/></p>
 
 ## Requirements
 
