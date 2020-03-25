@@ -1,3 +1,4 @@
 hooks:
   build:
+  - npm install -g yarn
   - yarn global add serve
