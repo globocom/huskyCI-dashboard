@@ -11,7 +11,7 @@
     "@material-ui/icons": "^4.4.3",
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
-    "handlebars": "4.5.3",
+    "handlebars": "4.6.0",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
