@@ -12,7 +12,7 @@
     "chart.js": "^2.8.0",
     "clsx": "^1.0.4",
     "handlebars": "4.6.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-chartjs-2": "^2.7.6",
