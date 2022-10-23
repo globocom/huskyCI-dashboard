@@ -1,4 +1,5 @@
-<p align="center"><img src="logo-README.png"/></p>
+<p align="center"><a href="https://huskyci.opensource.globo.com
+  "><img src="logo-README.png"/></a></p>
 
 <p align="center">
   <a href="https://github.com/globocom/huskyCI-dashboard/releases"><img src="https://img.shields.io/github/v/release/globocom/huskyCI-dashboard"/></a>
